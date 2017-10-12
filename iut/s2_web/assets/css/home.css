@@ -1,0 +1,36 @@
+#accountForms{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+#accountForms .box{
+    box-sizing: border-box;
+	padding: 15px;
+}
+
+.formWrapper{
+	width: 300px;
+	margin: 30px 15px;
+}
+.formWrapper h2{
+	margin: 0;
+}
+
+
+.formContent{
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.formContent div{
+	margin: 10px 0;
+}
+.formContent input{
+    box-sizing: border-box;
+	width: 100%;
+}
+.formContent p{
+	margin: 0;
+	width: 100%;
+}

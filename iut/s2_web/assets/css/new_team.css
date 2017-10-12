@@ -1,0 +1,32 @@
+#newTeamForm{
+	width: 300px;
+	margin: 30px 15px;
+}
+#newTeamForm h2{
+	margin: 0;
+}
+
+
+.formContent{
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.formContent div{
+	margin: 10px 0;
+}
+.formContent input, .formContent select, .formContent textarea{
+    box-sizing: border-box;
+	width: 100%;
+	min-width: 100%;
+}
+.formContent p{
+	margin: 0;
+	width: 100%;
+}
+
+#customSport{
+	margin-top: 5px;
+	display: none;
+}

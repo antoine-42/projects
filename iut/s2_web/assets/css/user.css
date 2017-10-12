@@ -1,0 +1,12 @@
+#listeEquipe{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.equipeWrap{
+	width: 30%;
+	min-width: 300px;
+	margin: 10px 5px;
+	padding: 15px;
+}
