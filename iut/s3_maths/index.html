@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SkillRank</title>
+
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        -->
+        <script src="http://www.iut-fbleau.fr/projet/maths/?rah_external_output=pagerank.js"></script>
+        <script src="http://www.iut-fbleau.fr/projet/maths/?rah_external_output=logins.js"></script>
+    </head>
+    <body>
+        <div id="body">
+            <div class="main-flow" id="title-bar">
+                <h1>SkillRank</h1>
+            </div>
+            <div class="main-flow">
+                <!--
+                <div id="search-box">
+                    <h2>Chercher une personne</h2>
+                    <div id="search-input-box" class="text-input">
+                        <input type="text" id="search-input">
+                        <i id="search-button" class="material-icons">search</i>
+                    </div>
+                </div>
+                -->
+                <h2>Classements</h2>
+            </div>
+            <div id="classment-wrapper">
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="acda-box">
+                        <label for="acda-switch" id="acda-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>ACDA</h3>
+                                <i class="material-icons table-switch" id="acda-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="acda-table-wrapper">
+                            <table class="classment-table" id="acda-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="eng-box">
+                        <label for="eng-switch" id="eng-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>Anglais</h3>
+                                <i class="material-icons table-switch" id="eng-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="eng-table-wrapper">
+                            <table class="classment-table" id="eng-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="apl-box">
+                        <label for="apl-switch" id="apl-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>APL</h3>
+                                <i class="material-icons table-switch" id="apl-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="apl-table-wrapper">
+                            <table class="classment-table" id="apl-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="art-box">
+                        <label for="art-switch" id="art-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>Art</h3>
+                                <i class="material-icons table-switch" id="art-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="art-table-wrapper">
+                            <table class="classment-table" id="art-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="asr-box">
+                        <label for="asr-switch" id="asr-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>ASR</h3>
+                                <i class="material-icons table-switch" id="asr-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="asr-table-wrapper">
+                            <table class="classment-table" id="asr-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="ec-box">
+                        <label for="ec-switch" id="ec-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>EC</h3>
+                                <i class="material-icons table-switch" id="ec-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="ec-table-wrapper">
+                            <table class="classment-table" id="ec-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="egod-box">
+                        <label for="egod-switch" id="egod-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>EGOD</h3>
+                                <i class="material-icons table-switch" id="egod-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="egod-table-wrapper">
+                            <table class="classment-table" id="egod-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="maths-box">
+                        <label for="maths-switch" id="maths-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>Maths</h3>
+                                <i class="material-icons table-switch" id="maths-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="maths-table-wrapper">
+                            <table class="classment-table" id="maths-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="sgbd-box">
+                        <label for="sgbd-switch" id="sgbd-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>SGBD</h3>
+                                <i class="material-icons table-switch" id="sgbd-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="sgbd-table-wrapper">
+                            <table class="classment-table" id="sgbd-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="classment-box-wrapper">
+                    <div class="classment-box" id="sport-box">
+                        <label for="sport-switch" id="sport-switch-label" class="table-switch-label" title="Étendre">
+                            <div class="title-button-group">
+                                <h3>Sport</h3>
+                                <i class="material-icons table-switch" id="sport-switch" style="transform: rotate(270deg);">expand_more</i>
+                            </div>
+                        </label>
+                        <div class="classment-table-wrapper" id="sport-table-wrapper">
+                            <table class="classment-table" id="sport-table">
+                                <tr>
+                                    <th></th>
+                                    <th>Points</th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-flow" id="footer-bar">
+                <p>Auteur: <a href="https://github.com/antoine-42">Antoine Dujardin</a></p>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
