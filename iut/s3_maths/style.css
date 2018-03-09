@@ -6,7 +6,7 @@ body{
 
     color:       #101010;
     font-family: arial;
-    font-size:   1.1em;
+    font-size:   1.2em;
 
     overflow-x: hidden;
 }
@@ -66,9 +66,14 @@ button, input[type="submit"], .button{
 button:hover, button:focus, input[type="submit"]:hover, input[type="submit"]:focus, .button:hover, .button:focus {
     background-color: #0d5694;
 }
-button::active, input[type="submit"]:active, .button:active {
+button:active, input[type="submit"]:active, .button:active {
     background-color: #68a1d2;
     color: #202020;
+}
+button:disabled, input[type="submit"]:disabled, .button:disabled {
+    background-color: #CCC;
+    color: #202020;
+    cursor: not-allowed;
 }
 button.warning, input[type="submit"].warning {
     background-color: #e61a03;
@@ -85,10 +90,6 @@ button::-moz-focus-inner, input[type="submit"]::-moz-focus-inner {
 }
 
 input[type="checkbox"] {
-    height:    13px;
-    width:     13px !important;
-    min-width: 13px !important;
-
     margin:       0;
     margin-right: 5px;
 }
@@ -164,13 +165,16 @@ i.warning:active{
 }
 
 
+#content div:last-child{
+    margin-bottom: 100px;
+}
 .main-flow{
-    display: flex;
+    display:        flex;
     flex-direction: column;
-    align-items: center;
+    align-items:    center;
 }
 .main-flow > *{
-    width: 80%;
+    width: 50%;
 }
 
 #search-input-box {
@@ -184,68 +188,86 @@ i.warning:active{
 }
 
 
-#classment-wrapper{
+#subjects-form{
+    margin-top: 50px;
+
     display:         flex;
-    justify-content: flex-start;
+    flex-direction:  column;
+    justify-content: center;
+    align-items:     flex-start;;
+}
+#subjects-form p{
+    width: 100%;
+    margin: 10px 0;
+}
+#subjects-checkboxes{
+    display:         flex;
+    justify-content: space-between;
     flex-wrap:       wrap;
 
-    margin: -15px 0;
-
-    padding-bottom: 100px;
+    margin: -5px -15px;
 }
 
-.classment-box-wrapper{
-    margin:  15px;
-}
-.classment-box{
-    padding: 0 15px;
+.checkbox-label{
+    display:     inline-flex;
+    align-items: center;
 
-    background-color: rgb(235, 235, 235);
-    box-shadow: 0px 0px 5px 0px #000;
-    transition-duration: 0.2s;
+    margin: 5px 15px;
 }
-.classment-box:hover{
-    box-shadow: 0px 0px 7px 1px #000;
-}
-.classment-box:active{
-    box-shadow: 0px 0px 10px 2px #000;
+#sort-button{
+    margin-top: 20px;
+    padding: 10px 25px;
 }
 
-.title-button-group{
-    display:         flex;
-    align-items:     center;
-    justify-content: space-between;
 
-    padding: 0 15px;
-    margin: 0 -15px;
+#classment-table-wrapper{
+    margin-top: 20px;
 }
-.title-button-group h3{
-    margin: 15px 10px 15px 0;
+#classment-table{
+    width: 100%;
 }
-.table-switch{
-    transition-timing-function: linear;
-    transition-duration: 0.2s;
+#classment-table thead tr{
+    border-bottom: 1px solid #808080;
+}
+#classment-table tr:nth-child(even){
+    background-color: #e0e0e0;
+}
+#classment-table th{
+    text-align: left;
+}
+#classment-table td, #classment-table th{
+    padding: 5px 10px;
 }
 
-.classment-table-wrapper {
-    height:   0;
-    width:    0;
-    overflow: hidden;
-
-    transition: height 0.6s, width 0.2s;
-}
-.classment-table td:first-child{
-    padding-right: 10px;
-}
-.classment-table td{
-    white-space: nowrap;
-}
 
 #footer-bar{
     position: absolute;
     bottom: 0;
     width: 100%;
 
-    background-color: #E0E0E0;
-    box-shadow: 0px 0px 5px 0px #000;
+    background-color: #e0e0e0;
+    box-shadow: 0px 0px 2px 0px #000;
+}
+
+
+
+@media (max-width: 1500px){ /*phone horizontal/tablet*/
+    .main-flow > *{
+        width: 70%;
+    }
+}
+@media (max-width: 1000px){ /*phone horizontal/tablet*/
+    .main-flow > *{
+        width: 85%;
+    }
+}
+@media (max-width: 750px){ /*phone*/
+    .main-flow > *{
+        width: 95%;
+    }
+}
+@media (max-width: 350px){ /*small phone*/
+    .main-flow > *{
+        width: 100%;
+    }
 }
