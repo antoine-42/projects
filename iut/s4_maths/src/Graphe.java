@@ -71,16 +71,17 @@ class Graphe{
             int outcomingSum = getArreteFlotSum(outcoming);
 
             currSommet.sumIn = incomingSum;
-            if (incomingSum != outcomingSum) {
-                if (currSommet.getId() == entree_id && incomingSum > 0) {
-                    System.out.println("flow entering entry");
-                }
-                else if (currSommet.getId() == sortie_id && outcomingSum > 0) {
-                    System.out.println("flow leaving exit");
-                }
-                else {
-                    System.out.println(String.format("Sommet %d: incoming %d != outgoing %d", currSommet.getId(), incomingSum, outcomingSum));
-                }
+
+            if (currSommet.getId() == entree_id && incomingSum > 0) {
+                System.out.println("flow entering entry");
+                return false;
+            }
+            else if (currSommet.getId() == sortie_id && outcomingSum > 0) {
+                System.out.println("flow leaving exit");
+                return false;
+            }
+            if (incomingSum != outcomingSum && currSommet.getId() != entree_id && currSommet.getId() != sortie_id) {
+                System.out.println(String.format("Sommet %d: incoming %d != outgoing %d", currSommet.getId(), incomingSum, outcomingSum));
                 return false;
             }
         }
@@ -111,16 +112,16 @@ class Graphe{
         while (!file.isEmpty()) {
             //Prendre un sommet dans la file
             Sommet currSommet = file.pop();
-
+            // TODO check if sommet was marqued during this round of marquing
             // Marquer le sommet
             currSommet.marquagePlus = new LinkedList<>();
             currSommet.marquageMoins = new LinkedList<>();
 
             marquerSommetPlus(currSommet);
-            //marquerSommetMoins(currSommet);
+            marquerSommetMoins(currSommet);
 
-            // S'il a ete marquer, ajouter ses fils dans la file
-            if (!currSommet.marquagePlus.isEmpty() || !currSommet.marquageMoins.isEmpty()) {
+            // S'il a ete marque, ajouter ses fils dans la file
+            if (currSommet.marque()) {
                 for (Arete outcomingArete : currSommet.aretes) {
                     file.add(getSommet(outcomingArete.getArrivee()));
                 }
@@ -139,21 +140,73 @@ class Graphe{
     }
     // Marquage negatif d'un sommet
     private void marquerSommetMoins(Sommet sommet){
-        LinkedList<Arete> outcoming = sommet.aretes;
-        for (Arete outcomingArete : outcoming) {
-            if (outcomingArete.getFlot() < outcomingArete.getCapacite()) {
-                sommet.marquageMoins.add(outcomingArete.getArrivee());
+        LinkedList<Arete> incoming = getIncomingAretes(sommet.getId());
+        for (Arete incomingArete : incoming) {
+            int incomingSommetID = incomingArete.getDepart();
+            LinkedList<Arete> currIncoming = (LinkedList<Arete>) incoming.clone();
+            currIncoming.remove(incomingArete);
+            if (incomingArete.getFlot() > 0 && getArreteCapaciteSum(currIncoming) > 0 ) {
+                sommet.marquageMoins.add(incomingSommetID);
             }
         }
     }
 
+    // Cherche a augmenter le flot d'un graphe
     void augmenterFlot(){
+        LinkedList<Sommet> chemin = getChemin();
+    }
+    // Donne un chemin du debut a la fin avec que des sommets marques
+    private LinkedList<Sommet> getChemin(){
+        LinkedList<Sommet> passed = new LinkedList<>();
+        LinkedList<Sommet> chemin = new LinkedList<>();
+        chemin.add(getSommet(entree_id));
 
+        while (chemin.getLast().getId() != sortie_id){
+            LinkedList<Sommet> successeurs = getSuccesseursMarques(chemin.getLast());
+
+            if (successeurs.size() == 0){
+                // Aller a une autre branche
+                while (true){
+                    chemin.pop();
+                    LinkedList<Sommet> backtrackSuccesseurs = getSuccesseursMarques(chemin.getLast());
+
+                    if (backtrackSuccesseurs.size() > 0){
+                        chemin.add(backtrackSuccesseurs.getFirst());
+                        break;
+                    }
+                    else if (chemin.size() == 0){
+                        // Fail, aucun chemin valide
+                        return null;
+                    }
+                }
+            }
+            else {
+                Sommet currSommet = successeurs.pop();
+                chemin.add(currSommet);
+                passed.add(currSommet);
+
+                successeurs.removeAll(passed);
+            }
+        }
+        return chemin;
+    }
+    // Donne tout les successeurs d'un sommets qui sont marques
+    LinkedList<Sommet> getSuccesseursMarques(Sommet sommet){
+        LinkedList<Sommet> successeursMarques = new LinkedList<>();
+
+        for (Arete arete : sommet.aretes){
+            Sommet currSommet = getSommet(arete.getArrivee());
+            if (currSommet.marque()){
+                successeursMarques.add(currSommet);
+            }
+        }
+
+        return successeursMarques;
     }
     // Donne le flot maximal entre les arretes
-    int maxFlot(Arete[] aretes) throws Exception{
+    static int maxFlot(LinkedList<Arete> aretes) throws Exception{
         int minFlot = Integer.MAX_VALUE;
-        int lastArrivee = aretes[0].getDepart();
+        int lastArrivee = aretes.get(0).getDepart();
 
         for(Arete arete : aretes){
             if (lastArrivee != arete.getDepart()){ // On doit partir du dernier sommet d'arrivee.

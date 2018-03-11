@@ -32,6 +32,10 @@ class Sommet {
         return id;
     }
 
+    boolean marque(){
+        return !marquageMoins.isEmpty() || !marquagePlus.isEmpty();
+    }
+
 
     private String marquageToString(Integer i, boolean plus){
         if (plus){

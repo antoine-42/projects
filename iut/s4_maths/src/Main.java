@@ -1,8 +1,12 @@
 public class Main {
-    public static void main(String[] args) {
-        Graphe g = new Graphe();
+    public static void main(String[] args) throws Exception {
         //PROBLEME: v.chastel@free.fr
-        /*
+
+        test3();
+    }
+
+    private static void test0() throws Exception{
+        Graphe g = new Graphe();
 
         g.ajouterSommet();
         g.ajouterSommet();
@@ -21,7 +25,11 @@ public class Main {
         g.setEntree(0);
         g.setSortie(3);
 
-        */
+        g.marquer();
+        System.out.println(g);
+    }
+    private static void test1() throws Exception{
+        Graphe g = new Graphe();
 
         g.ajouterSommet();
         g.ajouterSommet();
@@ -39,7 +47,11 @@ public class Main {
         g.setEntree(0);
         g.setSortie(3);
 
-        /*
+        g.marquer();
+        System.out.println(g);
+    }
+    private static void test2() throws Exception{
+        Graphe g = new Graphe();
 
         g.ajouterSommet();
         g.ajouterSommet();
@@ -65,10 +77,29 @@ public class Main {
         g.setEntree(0);
         g.setSortie(5);
 
-        */
+        g.marquer();
+        System.out.println(g);
+    }
+    private static void test3() throws Exception{
+        Graphe g = new Graphe();
+
+        g.ajouterSommet();
+        g.ajouterSommet();
+        g.ajouterSommet();
+        g.ajouterSommet();
+
+        g.ajouterArete(0, 1, 100, 0);
+        g.ajouterArete(0, 2, 100, 1);
+
+        g.ajouterArete(2, 1, 1, 1);
+
+        g.ajouterArete(1, 3, 100, 1);
+        g.ajouterArete(2, 3, 100, 0);
+
+        g.setEntree(0);
+        g.setSortie(3);
 
         g.marquer();
         System.out.println(g);
-
     }
 }
