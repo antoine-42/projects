@@ -5,16 +5,19 @@ class Arete {
     private int flot;
 
     public Arete(int d, int a, int c, int f){
+        depart = d;
         arrivee = a;
         capacite = c;
         flot = f;
     }
     public Arete(int d, int a, int c){
+        depart = d;
         arrivee = a;
         capacite = c;
         flot = 0;
     }
     public Arete(int d, int a){
+        depart = d;
         arrivee = a;
         capacite = 0;
         flot = 0;

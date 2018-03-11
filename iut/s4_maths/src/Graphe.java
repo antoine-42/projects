@@ -2,14 +2,14 @@ import java.util.*;
 
 
 class Graphe{
-    private LinkedList<Sommet> sommets = new LinkedList<Sommet>();
+    private LinkedList<Sommet> sommets = new LinkedList<>();
     
     private int nb_sommets = 0;
     private Integer entree_id;
     private Integer sortie_id;
 
 
-    public Graphe(){
+    Graphe(){
 
     }
 
@@ -90,7 +90,7 @@ class Graphe{
             System.out.println("Flot valide");
         }
 
-        LinkedList<Sommet> file = new LinkedList<Sommet>();
+        LinkedList<Sommet> file = new LinkedList<>();
         marquerIteratif(file);
     }
     private void marquerIteratif(LinkedList<Sommet> file){
@@ -103,8 +103,8 @@ class Graphe{
         while (!file.isEmpty()) {
             Sommet currSommet = file.pop();
 
-            currSommet.marquagePlus = new LinkedList<Integer>();
-            currSommet.marquageMoins = new LinkedList<Integer>();
+            currSommet.marquagePlus = new LinkedList<>();
+            currSommet.marquageMoins = new LinkedList<>();
 
             marquerSommetPlus(currSommet);
             //marquerSommetMoins(currSommet);
@@ -119,7 +119,7 @@ class Graphe{
     private void marquerSommetPlus(Sommet sommet){
         LinkedList<Arete> incoming = getIncomingAretes(sommet.getId());
         for (Arete incomingArete : incoming) {
-            Sommet incomingSommetID = incomingArete.getDepart().getId();
+            int incomingSommetID = incomingArete.getDepart();
             if (incomingArete.getFlot() < incomingArete.getCapacite()) {
                 sommet.marquagePlus.add(incomingSommetID);
             }
@@ -145,7 +145,7 @@ class Graphe{
     }
 
     private LinkedList<Arete> getIncomingAretes(int id){
-        LinkedList<Arete> results = new LinkedList<Arete>();
+        LinkedList<Arete> results = new LinkedList<>();
         for (Sommet currSommet : sommets) {
             for (Arete currArete : currSommet.aretes) {
                 if (currArete.getArrivee() == id) {
@@ -173,13 +173,14 @@ class Graphe{
 
 
     public String toString(){
-        String result = "";
-        result += String.format("Graphe: %d sommets\n", nb_sommets);
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append(String.format("Graphe: %d sommets\n", nb_sommets));
 
         for (Sommet currSommet : sommets) {
-            result += currSommet + "\n";
+            resultBuilder.append(currSommet);
+            resultBuilder.append("\n");
         }
 
-        return result;
+        return resultBuilder.toString();
     }
 }
