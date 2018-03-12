@@ -1,8 +1,6 @@
 public class Main {
     public static void main(String[] args) throws Exception {
-        //PROBLEME: v.chastel@free.fr
-
-        test3();
+        test1();
     }
 
     private static void test0() throws Exception{
@@ -63,7 +61,6 @@ public class Main {
         g.ajouterArete(0, 1, 2, 2);
         g.ajouterArete(0, 2, 6, 0);
         g.ajouterArete(0, 3, 4, 2);
-        //g.ajouterArete(0, 4, 4, 2);
 
         g.ajouterArete(1, 4, 2, 2);
         g.ajouterArete(1, 5, 4, 0);

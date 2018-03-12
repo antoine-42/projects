@@ -109,9 +109,12 @@ class Graphe{
     }
     // Effectue le marquage interativement avec les sommets contenus dans file
     private void marquerIteratif(LinkedList<Sommet> file){
+        LinkedList<Sommet> passed = new LinkedList<>();
+
         while (!file.isEmpty()) {
             //Prendre un sommet dans la file
             Sommet currSommet = file.pop();
+
             // TODO check if sommet was marqued during this round of marquing
             // Marquer le sommet
             currSommet.marquagePlus = new LinkedList<>();
@@ -122,8 +125,11 @@ class Graphe{
 
             // S'il a ete marque, ajouter ses fils dans la file
             if (currSommet.marque()) {
+                passed.add(currSommet);
                 for (Arete outcomingArete : currSommet.aretes) {
-                    file.add(getSommet(outcomingArete.getArrivee()));
+                    if (!passed.contains(outcomingArete)) {
+                        file.add(getSommet(outcomingArete.getArrivee()));
+                    }
                 }
             }
         }
@@ -154,6 +160,15 @@ class Graphe{
     // Cherche a augmenter le flot d'un graphe
     void augmenterFlot(){
         LinkedList<Sommet> chemin = getChemin();
+        while (chemin != null) {
+            // augmenter le flot a partir du chemin obtenu
+
+            // Ca marche pas :/
+            
+            // marquer a nouveau et obtenir un nouveau chemin 
+            marquer();
+            LinkedList<Sommet> chemin = getChemin();
+        }
     }
     // Donne un chemin du debut a la fin avec que des sommets marques
     private LinkedList<Sommet> getChemin(){
