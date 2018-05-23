@@ -1,30 +1,4 @@
-<<<<<<< HEAD
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Team extends CI_Controller {
-
-	public function index(){
-		$this->load->library('table');
-
-		$this->load->view('templates/header');
-		$this->load->view('team');
-		$this->load->view('templates/footer');
-	}
-
-	public function create(){
-		$this->load->library('table');
-
-		$HeaderParam = array();
-		$HeaderParam["additionalCSS"] = "new_team";
-		$HeaderParam["additionalJS"] = "new_team";
-
-		$this->load->view('templates/header', $HeaderParam);
-		$this->load->view('new_team');
-		$this->load->view('templates/footer');
-	}
-}
-=======
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -85,7 +59,7 @@ class Team extends CI_Controller {
 		if($this->input->post('default_sport') == "other"){
 			$this->form_validation->set_rules('custom_sport', 'Sport custom', 'required');
 		}
-name, $password, $password_required, $confirm_required, $is_secret, $admin, $sport, $location, $max_users, $mixed, $description
+        //name, $password, $password_required, $confirm_required, $is_secret, $admin, $sport, $location, $max_users, $mixed, $description
 
 		if($this->form_validation->run() == TRUE){
 			$result = $this->model_team->create_team(set_value('name'), set_value('password_required'), set_value('password'), set_value('is_secret'), set_value('default_sport'), set_value('location'), set_value('max_users'), set_value('mixite'), set_value('description'));
@@ -105,4 +79,3 @@ name, $password, $password_required, $confirm_required, $is_secret, $admin, $spo
 		$this->load->view('templates/footer');
 	}
 }
->>>>>>> 8dec03fc4632d422adc2ca1789b5d5a2dadc8683
