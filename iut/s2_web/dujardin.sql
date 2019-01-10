@@ -39,7 +39,7 @@ CREATE TABLE `teams` (
   `description` text NOT NULL,
   `members` text NOT NULL,
   `trainers` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 PRIMARY KEY(name);
 
 -- --------------------------------------------------------
 

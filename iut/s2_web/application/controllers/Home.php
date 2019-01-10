@@ -10,7 +10,6 @@ class Home extends CI_Controller {
 			redirect('user/', 'location');
 		}
 
-
 		$HeaderParam = array();
 		$HeaderParam["additionalCSS"] = "home";
 
