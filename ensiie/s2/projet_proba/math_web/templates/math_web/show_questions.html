@@ -1,0 +1,21 @@
+{% extends "math_web/base.html" %}
+
+{% load static %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/show_questions.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <h2>Exercice</h2>
+    <form action="./" method="post" id="submit_results_form">
+        {% csrf_token %}
+        {% for key, question_list in questions.items %}
+            <h3>{{ key }}</h3>
+            {% for question in question_list %}
+                <label>{{ question }}</label>
+                <input type="number" required="">
+            {% endfor %}
+        {% endfor %}
+        <input type="submit" value="OK" id="submit_button">
+    </form>
+{% endblock content %}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Projet proba par Antoine Dujardin</title>
+
+        {% load static %}
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/base.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/header.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/form.css' %}">
+        {% block stylesheets %}{% endblock stylesheets %}
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo_wrapper">
+                <a href="https://ensiie.fr">
+                    <img src="{% static 'math_web/images/logo_ensiie.jpg' %}" alt="Logo ENSIIE" id="logo_ensiie">
+                </a>
+            </div>
+            <h1>Projet Probabilités</h1>
+            <p>Antoine Dujardin</p>
+        </div>
+        <div id="page_content">
+            {% block content %}{% endblock content %}
+        </div>
+
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        {% block scripts %}{% endblock scripts %}
+    </body>
+</html>

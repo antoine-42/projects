@@ -1,0 +1,18 @@
+:root {
+  --main-color: #82B043;
+  --color-button: #82B043;
+  --color-button-active: #558534;
+}
+
+body{
+    margin: 0;
+    background-color: #f0f0f0;
+    color: #202020;
+    font-family: arial, sans-serif;
+    font-size: 1em;
+}
+
+#page_content{
+    width: 80%;
+    margin: 50px 10% 0;
+}
