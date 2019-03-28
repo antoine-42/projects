@@ -1,3 +1,7 @@
 form h3{
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 3;
+}
+
+input.integral_solution{
+    max-width: 350px;
 }

@@ -10,9 +10,7 @@
     <form action="./" method="post" id="get_settings_form">
         {% csrf_token %}
         {{ form }}
-        <div class="slidecontainer">
-            <input type="range" min="0" max="100" value="50" class="slider" id="myRange">
-        </div>
-        <input type="submit" value="OK" id="submit_button">
+        <input type="range" min="0" max="100" value="50" class="slider custom-range" id="myRange">
+        <input type="submit" value="OK" id="submit_button" class="btn btn-primary">
     </form>
 {% endblock content %}

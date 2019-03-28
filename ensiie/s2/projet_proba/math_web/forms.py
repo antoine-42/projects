@@ -11,3 +11,9 @@ class QuestionsForm(forms.Form):
 
     def clean(self):
         pass
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionsForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            if visible.field.widget.input_type in ["number", "text", "email"]:
+                visible.field.widget.attrs['class'] = 'form-control'

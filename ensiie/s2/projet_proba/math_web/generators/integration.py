@@ -287,7 +287,15 @@ class LogarithmicIntegrationSolver(IntegrationSolver):
             self.c = math_web.generators.generate_uniform_random_number(0, 10, 0.5, 0)
         else:
             self.c = c
-        IntegrationSolver.__init__(self, a, b)
+        if a is None:
+            self.a = math_web.generators.generate_uniform_random_number(-10, 10, 0.5, [0])
+        else:
+            self.a = a
+        if b is None:
+            self.b = math_web.generators.generate_uniform_random_number(-10, 10, 0.5, [0, self.a])
+        else:
+            self.b = b
+        IntegrationSolver.__init__(self, self.a, self.b)
 
     def solve(self):
         """Solve the integral.
@@ -295,11 +303,10 @@ class LogarithmicIntegrationSolver(IntegrationSolver):
         # numpy.log(0) will throw a warning.
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            # + 0j: Convert to complex to avoid errors when alpha is not an integer
             self.solution = (
-                    self.b * numpy.log(self.b * self.c + 0j)
-                    - self.a * numpy.log(self.a * self.c + 0j)
-                    - self.c * numpy.log(self.b - self.a + 0j)
+                    self.b * numpy.log(self.b * self.c)
+                    - self.a * numpy.log(self.a * self.c)
+                    - self.c * numpy.log(self.b - self.a)
             )
 
     def get_mathjax_function(self):
