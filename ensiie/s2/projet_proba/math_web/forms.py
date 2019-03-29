@@ -19,19 +19,29 @@ class QuestionsForm(forms.Form):
                 visible.field.widget.attrs['class'] = 'form-control'
 
 
-class ResponseForm:
+class ResponseForm(forms.Form):
     def __init__(self, fields, *args, **kwargs):
         super(ResponseForm, self).__init__(*args, **kwargs)
-        for key, questions in fields.items:
+        n_key = 0
+        for key, questions in fields.items():
             for i, question in enumerate(questions):
                 id = '{key}_{i}'.format(key=key, i=i)
                 if key != "polynomial":
-                    self.fields[id] = forms.FloatField(label="question")
+                    curr_response_field = forms.FloatField(label=question)
+                    curr_response_field.group = n_key
+                    curr_response_field.widget.attrs['class'] = 'form-control integral_solution'
+                    self.fields[id] = curr_response_field
                 else:
                     CHOICES = [('no_solution', 'Pas de solution'),
                                ('1_solution', 'Une solution'),
                                ('2_solutions', 'Deux solutions')]
-                    self.fields[id + "_nb_questions"] = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
+                    curr_nb_answers_select = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
+                    curr_nb_answers_select.group = n_key
+                    self.fields[id + "_nb_questions"] = curr_nb_answers_select
                     for xn in range(2):
                         curr_x_id = "{id}_x{xn}".format(id=id, xn=xn)
-                        self.fields[curr_x_id] = forms.FloatField(label="\(x_{xn}\)".format(xn=xn))
+                        curr_xn_field = forms.FloatField(label="\(x_{xn}\)".format(xn=xn))
+                        curr_xn_field.group = n_key
+                        curr_xn_field.widget.attrs['class'] = 'form-control'
+                        self.fields[curr_x_id] = curr_xn_field
+            n_key += 1

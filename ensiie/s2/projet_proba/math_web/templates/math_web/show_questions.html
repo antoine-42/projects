@@ -9,43 +9,21 @@
     <h2>Exercice</h2>
     <form action="./" method="post" id="submit_results_form">
         {% csrf_token %}
-        {{ form }}
-        {% for key, question_list in questions.items %}
-            {% if question_list %}
-                <h3>{{ key }}</h3>
-            {% endif %}
-            {% for question in question_list %}
-                {% if key == "polynomial" %}
-                    <p>{{ question }}</p>
-                    <div class="solution_number_radios">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="poly_{{ forloop.counter }}_no_solution" name="poly_{{ forloop.counter }}_solution_n" class="custom-control-input">
-                            <label class="custom-control-label" for="poly_{{ forloop.counter }}_no_solution">Aucune solution</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="poly_{{ forloop.counter }}_one_solution" name="poly_{{ forloop.counter }}_solution_n" class="custom-control-input">
-                            <label class="custom-control-label" for="poly_{{ forloop.counter }}_one_solution">Une solution</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="poly_{{ forloop.counter }}_two_solutions" name="poly_{{ forloop.counter }}_solution_n" class="custom-control-input">
-                            <label class="custom-control-label" for="poly_{{ forloop.counter }}_two_solutions">Deux solutions</label>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label class="col-sm-1 col-form-label">\(x_0\)</label>
-                        <div class="col-sm-5">
-                            <input type="number" required="" class="form-control">
-                        </div>
-                        <label class="col-sm-1 col-form-label">\(x_1\)</label>
-                        <div class="col-sm-5">
-                            <input type="number" required="" class="form-control">
-                        </div>
-                    </div>
-                {% else %}
-                    <label>{{ question }}</label>
-                    <input type="number" required="" class="form-control integral_solution">
-                {% endif %}
-            {% endfor %}
+        {% regroup form.fields by group as field_group %}
+        {% for group in field_group %}
+            <div class="group_{{ group.grouper }}">
+                {% for field in group.list %}
+                    {{ field.errors }}
+                    {{ field.label_tag }}
+                    {{ field }}
+                {% endfor %}
+            </div>
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
         {% endfor %}
         <input type="submit" value="OK" id="submit_button" class="btn btn-primary">
     </form>
