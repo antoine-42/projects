@@ -2,7 +2,7 @@ import random
 from django.shortcuts import render
 
 import math_web.generators
-from .forms import QuestionsForm
+from .forms import QuestionsForm, ResponseForm
 
 
 def index(request):
@@ -51,10 +51,11 @@ def show_questions(request, form):
     for i in range(n23):
         problems["log"].append(math_web.generators.LogarithmicIntegrationSolver())
 
+    questions = {key: [problem.get_mathjax_function() for problem in problem_list]
+                 for key, problem_list
+                 in problems.items()}
     context = {
-        "questions": {key: [problem.get_mathjax_function() for problem in problem_list]
-                      for key, problem_list
-                      in problems.items()}
+        "form": ResponseForm(questions)
     }
     return render(request, 'math_web/show_questions.html', context)
 

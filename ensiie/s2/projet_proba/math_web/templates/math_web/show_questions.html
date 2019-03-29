@@ -9,6 +9,7 @@
     <h2>Exercice</h2>
     <form action="./" method="post" id="submit_results_form">
         {% csrf_token %}
+        {{ form }}
         {% for key, question_list in questions.items %}
             {% if question_list %}
                 <h3>{{ key }}</h3>
