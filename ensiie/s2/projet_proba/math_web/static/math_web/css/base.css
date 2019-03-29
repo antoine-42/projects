@@ -10,10 +10,9 @@ body{
     color: #202020;
     font-family: arial, sans-serif;
     font-size: 1em;
-    margin-bottom: 100px;
 }
 
 #page_content{
     width: 80%;
-    margin: 50px 10% 0;
+    margin: 50px 10% 100px;
 }

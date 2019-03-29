@@ -9,11 +9,10 @@ form{
     grid-template-columns: min-content auto auto;
 
     align-items: center;
-    grid-row-gap: 10px;
+    grid-gap: 10px;
 }
 
 form label{
-    padding-right: 0.5em;
     margin: 0;
     white-space: nowrap;
 }
