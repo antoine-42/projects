@@ -9,7 +9,7 @@ form{
 }
 
 form h3{
-    grid-column: 1 / span 7;
+    grid-column: 1 / -1;
 }
 
 label.question_label{

@@ -25,6 +25,6 @@ form input[type=number], form input[type=range]{
 }
 
 #submit_button{
-    grid-column: 1 / span 6;
+    grid-column: 1 / -1;
     justify-self: stretch;
 }

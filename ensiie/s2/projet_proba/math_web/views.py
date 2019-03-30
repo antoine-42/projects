@@ -21,7 +21,7 @@ def index(request):
 
 
 def show_results(request, form):
-    return render(request, 'math_web/show_questions.html')
+    return render(request, 'math_web/show_results.html')
 
 
 def show_questions(request, form):
@@ -68,10 +68,10 @@ def show_questions(request, form):
     context = {
         "form": GetResponseForm(questions_dict=questions),
         "text": {
-            "polynomial": "Equations du second degré",
+            "polynomial": "Équations du second degré",
             "power_a": "Intégrations de puissance",
-            "trig_a": "Integrations trigonométriques",
-            "log": "Integrations logarithmiques",
+            "trig_a": "Intégrations trigonométriques",
+            "log": "Intégrations logarithmiques",
         }
     }
     return render(request, 'math_web/show_questions.html', context)

@@ -113,6 +113,9 @@ class PolynomialSolver:
         for key, value in dict.items():
             if isinstance(value, numpy.int64):
                 dict[key] = int(value)
+            if isinstance(value, numpy.complex128):
+                dict[key] = float(value)
+        return dict
 
 
 class RandomPolynomialSolver(PolynomialSolver):
