@@ -1,4 +1,5 @@
 {% extends "math_web/base.html" %}
+{% load template_filters %}
 
 {% load static %}
 {% block stylesheets %}
@@ -9,21 +10,35 @@
     <h2>Exercice</h2>
     <form action="./" method="post" id="submit_results_form">
         {% csrf_token %}
-        {% regroup form.fields by group as field_group %}
-        {% for group in field_group %}
-            <div class="group_{{ group.grouper }}">
-                {% for field in group.list %}
-                    {{ field.errors }}
-                    {{ field.label_tag }}
-                    {{ field }}
-                {% endfor %}
-            </div>
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
         {% endfor %}
         {% for field in form.visible_fields %}
-            <div class="fieldWrapper">
-                {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
-            </div>
+            {% if forloop.counter0 in form.fields_n2startpart %}
+                {% with form.fields_n2startpart|get_item:forloop.counter0 as title %}
+                    <h3>{{ text|get_item:title }}</h3>
+                {% endwith %}
+            {% endif %}
+            {{ field.errors }}
+            {% if field.field.widget.input_type == "radio" %}
+                <label class="question_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="solution_number_radios">
+                    {% for radio in field %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            {{ radio.tag }}
+                            <label class="custom-control-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% if form.fields_n2part|get_item:forloop.counter0 != 'polynomial' %}
+                    <label class="question_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% else %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endif %}
+            {% endif %}
         {% endfor %}
         <input type="submit" value="OK" id="submit_button" class="btn btn-primary">
     </form>

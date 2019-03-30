@@ -48,6 +48,12 @@ class IntegrationSolver:
         result += "Solution: {solution}".format(solution=self.solution)
         return result
 
+    def to_dict(self):
+        dict = self.__dict__
+        for key, value in dict.items():
+            if isinstance(value, numpy.int64):
+                dict[key] = int(value)
+
 
 class PowerAIntegrationSolver(IntegrationSolver):
     """Compute the solution of an integral where f(x) = (cx−d)^α.

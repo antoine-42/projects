@@ -26,7 +26,7 @@ SECRET_KEY = '&pw=wpns42!yk1f+(*sy%#maurqylh9@$ot6ofa0job!2g7xx8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),]
+ALLOWED_HOSTS = ['127.0.0.1', gethostname(), gethostbyname(gethostname())]
 
 
 # Application definition

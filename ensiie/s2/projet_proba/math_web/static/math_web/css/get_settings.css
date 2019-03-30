@@ -1,3 +1,5 @@
 form{
+    grid-template-columns: min-content auto;
+
     justify-items: end;
 }
