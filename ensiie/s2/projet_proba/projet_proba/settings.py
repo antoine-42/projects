@@ -26,8 +26,7 @@ SECRET_KEY = '&pw=wpns42!yk1f+(*sy%#maurqylh9@$ot6ofa0job!2g7xx8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', gethostname(), gethostbyname(gethostname())]
-
+ALLOWED_HOSTS = ['127.0.0.1', 'antoine42.pythonanywhere.com', gethostname(), gethostbyname(gethostname()),]
 
 # Application definition
 
@@ -119,6 +118,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/antoine42/projects/ensiie/s2/projet_proba/static'
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
