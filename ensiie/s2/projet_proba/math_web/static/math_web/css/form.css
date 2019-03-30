@@ -6,7 +6,6 @@ form{
     margin-top: 20px;
 
     display: grid;
-    grid-template-columns: min-content auto auto;
 
     align-items: center;
     grid-gap: 10px;
@@ -23,10 +22,9 @@ form p {
 
 form input[type=number], form input[type=range]{
     justify-self: stretch;
-    grid-column: 2 / span 2;
 }
 
 #submit_button{
-    grid-column: 1 / span 3;
+    grid-column: 1 / -1;
     justify-self: stretch;
 }

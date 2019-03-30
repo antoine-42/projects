@@ -2,16 +2,26 @@ import random
 from django.shortcuts import render
 
 import math_web.generators
-from .forms import QuestionsForm, ResponseForm
+from .forms import GetSettingsForm, GetResponseForm
 
 
 def index(request):
     if request.method == 'POST':
-        form = QuestionsForm(request.POST)
-        if form.is_valid():
-            return show_questions(request, form)
-    else:
-        return get_settings(request)
+        form_name = request.POST["form_name"]
+        if form_name == "get_settings":
+            form = GetSettingsForm(request.POST)
+            if form.is_valid():
+                return show_questions(request, form)
+        elif form_name == "get_response":
+            form = GetResponseForm(request.POST, questions_dict=request.session["questions"])
+            form.data = request.POST
+            if form.is_valid():
+                return show_results(request, form)
+    return get_settings(request)
+
+
+def show_results(request, form):
+    return render(request, 'math_web/show_results.html')
 
 
 def show_questions(request, form):
@@ -29,33 +39,40 @@ def show_questions(request, form):
 
     problems = {
         "polynomial": [],
-        "power-a": [],
-        "power-b": [],
-        "trig-a": [],
-        "trig-b": [],
-        "trig-c": [],
+        "power_a": [],
+        "power_b": [],
+        "trig_a": [],
+        "trig_b": [],
+        "trig_c": [],
         "log": [],
     }
     for i in range(n1):
         problems["polynomial"].append(math_web.generators.RandomPolynomialSolver())
     for i in range(n21a):
-        problems["power-a"].append(math_web.generators.PowerAIntegrationSolver())
+        problems["power_a"].append(math_web.generators.PowerAIntegrationSolver())
     for i in range(n21b):
-        problems["power-b"].append(math_web.generators.PowerBIntegrationSolver())
+        problems["power_b"].append(math_web.generators.PowerBIntegrationSolver())
     for i in range(n22a):
-        problems["trig-a"].append(math_web.generators.TrigonometricAIntegrationSolver())
+        problems["trig_a"].append(math_web.generators.TrigonometricAIntegrationSolver())
     for i in range(n22b):
-        problems["trig-b"].append(math_web.generators.TrigonometricBIntegrationSolver())
+        problems["trig_b"].append(math_web.generators.TrigonometricBIntegrationSolver())
     for i in range(n22c):
-        problems["trig-c"].append(math_web.generators.TrigonometricCIntegrationSolver())
+        problems["trig_c"].append(math_web.generators.TrigonometricCIntegrationSolver())
     for i in range(n23):
         problems["log"].append(math_web.generators.LogarithmicIntegrationSolver())
 
-    questions = {key: [problem.get_mathjax_function() for problem in problem_list]
+    questions = {key: [{"class": problem.__class__.__name__, **problem.to_dict()} for problem in problem_list]
                  for key, problem_list
                  in problems.items()}
+    request.session["questions"] = questions
     context = {
-        "form": ResponseForm(questions)
+        "form": GetResponseForm(questions_dict=questions),
+        "text": {
+            "polynomial": "Équations du second degré",
+            "power_a": "Intégrations de puissance",
+            "trig_a": "Intégrations trigonométriques",
+            "log": "Intégrations logarithmiques",
+        }
     }
     return render(request, 'math_web/show_questions.html', context)
 
@@ -120,6 +137,6 @@ def get_settings(request):
     :return:
     """
     context = {
-        "form": QuestionsForm(),
+        "form": GetSettingsForm(),
     }
     return render(request, 'math_web/get_settings.html', context)

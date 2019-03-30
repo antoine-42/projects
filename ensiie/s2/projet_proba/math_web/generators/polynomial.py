@@ -108,6 +108,15 @@ class PolynomialSolver:
             string += "No root."
         return string
 
+    def to_dict(self):
+        dict = self.__dict__
+        for key, value in dict.items():
+            if isinstance(value, numpy.int64):
+                dict[key] = int(value)
+            if isinstance(value, numpy.complex128):
+                dict[key] = float(value)
+        return dict
+
 
 class RandomPolynomialSolver(PolynomialSolver):
     """Compute the roots of a random polynomial function.

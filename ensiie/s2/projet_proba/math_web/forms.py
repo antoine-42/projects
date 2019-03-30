@@ -1,7 +1,9 @@
 from django import forms
+from math_web.generators import deserialize_solver_object
 
 
-class QuestionsForm(forms.Form):
+class GetSettingsForm(forms.Form):
+    form_name = forms.CharField(widget=forms.HiddenInput(), initial="get_settings")
     nb_questions = forms.IntegerField(label="Nombre de questions", min_value=0, max_value=42, initial=10)
     p1 = forms.FloatField(label="\(p_1\)", min_value=0, max_value=1, initial=0.2)
     p2 = forms.FloatField(label="\(p_2\)", min_value=0, max_value=1, initial=0.8)
@@ -13,35 +15,49 @@ class QuestionsForm(forms.Form):
         pass
 
     def __init__(self, *args, **kwargs):
-        super(QuestionsForm, self).__init__(*args, **kwargs)
+        super(GetSettingsForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             if visible.field.widget.input_type in ["number", "text", "email"]:
                 visible.field.widget.attrs['class'] = 'form-control'
 
 
-class ResponseForm(forms.Form):
-    def __init__(self, fields, *args, **kwargs):
-        super(ResponseForm, self).__init__(*args, **kwargs)
-        n_key = 0
-        for key, questions in fields.items():
+class GetResponseForm(forms.Form):
+    form_name = forms.CharField(widget=forms.HiddenInput(), initial="get_response")
+
+    def __init__(self, *args, questions_dict=None, **kwargs):
+        super(GetResponseForm, self).__init__(*args, **kwargs)
+        questions_dict = {key: [deserialize_solver_object(problem) for problem in problem_list]
+                          for key, problem_list
+                          in questions_dict.items()}
+
+        question_n = 0
+        self.fields_n2startpart = {}
+        self.fields_n2part = []
+        for key, questions in questions_dict.items():
+            if "_b" not in key and "_c" not in key:
+                self.fields_n2startpart[question_n] = key
             for i, question in enumerate(questions):
                 id = '{key}_{i}'.format(key=key, i=i)
                 if key != "polynomial":
-                    curr_response_field = forms.FloatField(label=question)
-                    curr_response_field.group = n_key
+                    curr_response_field = forms.FloatField(label=question.get_mathjax_function())
                     curr_response_field.widget.attrs['class'] = 'form-control integral_solution'
                     self.fields[id] = curr_response_field
+                    question_n += 1
+                    self.fields_n2part.append(key)
                 else:
                     CHOICES = [('no_solution', 'Pas de solution'),
                                ('1_solution', 'Une solution'),
                                ('2_solutions', 'Deux solutions')]
-                    curr_nb_answers_select = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-                    curr_nb_answers_select.group = n_key
-                    self.fields[id + "_nb_questions"] = curr_nb_answers_select
+                    curr_nb_answers_select = forms.ChoiceField(
+                        label=question.get_mathjax_function(), choices=CHOICES,
+                        widget=forms.RadioSelect(attrs={'class': 'custom-control-input'})
+                    )
+                    self.fields["{id}_nb_questions".format(id=id)] = curr_nb_answers_select
                     for xn in range(2):
                         curr_x_id = "{id}_x{xn}".format(id=id, xn=xn)
                         curr_xn_field = forms.FloatField(label="\(x_{xn}\)".format(xn=xn))
-                        curr_xn_field.group = n_key
-                        curr_xn_field.widget.attrs['class'] = 'form-control'
+                        curr_xn_field.widget.attrs['class'] = 'form-control polynomial_solution'
                         self.fields[curr_x_id] = curr_xn_field
-            n_key += 1
+                    question_n += 3
+                    self.fields_n2part += [key] * 3
+

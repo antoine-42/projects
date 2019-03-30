@@ -8,26 +8,37 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/base.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/header.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/form.css' %}">
         {% block stylesheets %}{% endblock stylesheets %}
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
-        <div id="header">
-            <div id="logo_wrapper">
-                <a href="https://ensiie.fr">
-                    <img src="{% static 'math_web/images/logo_ensiie.jpg' %}" alt="Logo ENSIIE" id="logo_ensiie">
-                </a>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">Projet Probabilités</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Acceuil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% static 'math_web/documents/sujet.pdf' %}">Sujet</a>
+                    </li>
+                </ul>
             </div>
-            <h1>Projet Probabilités</h1>
-            <p>Antoine Dujardin</p>
+        </nav>
+        <div id="wrap">
+            <div id="page_content" role="main" class="container">
+                {% block content %}{% endblock content %}
+            </div>
         </div>
-        <div id="page_content">
-            {% block content %}{% endblock content %}
-        </div>
-
+        <footer class="footer text-muted text-center text-small">
+            <p>Projet Proba - Mars 2019</p>
+            <p>Antoine Dujardin - <a href="https://github.com/antoine-42/projects/tree/master/ensiie/s2/projet_proba">GitHub</a></p>
+        </footer>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
         {% block scripts %}{% endblock scripts %}
     </body>

@@ -1,7 +1,20 @@
-form h3{
-    grid-column: 1 / span 3;
+form{
+    margin-top: 20px;
+
+    display: grid;
+    grid-template-columns: min-content auto min-content auto min-content auto;
+
+    align-items: center;
+    grid-gap: 10px;
 }
 
+form h3{
+    grid-column: 1 / -1;
+}
+
+label.question_label{
+    grid-column: 1;
+}
 input.integral_solution{
-    max-width: 350px;
+    grid-column: 2;
 }
