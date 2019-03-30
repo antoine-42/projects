@@ -3,8 +3,22 @@
 
 {% load static %}
 {% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/show_results.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
-    <h2>Resultats</h2>
+    <h2>Résultats</h2>
+    <div id="results">
+        {% for group, question_list in questions.items %}
+            {% if group in text %}
+                <h3>{{ text|get_item:group }}</h3>
+            {% endif %}
+            {% for question in question_list %}
+                <p>{{ question.question }}</p>
+                <p>Solution: {{ question.solution }}</p>
+                <p class="{% if question.user_correct %}user_correct{% else %}user_wrong{% endif %}">Votre réponse: {{ question.user_response }}</p>
+                <p class="{% if question.user_correct %}user_correct{% else %}user_wrong{% endif %}">{% if question.user_correct %}+1 points{% else %}0 points{% endif %}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock content %}

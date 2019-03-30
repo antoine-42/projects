@@ -1,8 +1,16 @@
-import random
 from django.shortcuts import render
 
 import math_web.generators
+from math_web.generators import RandomPolynomialSolver
 from .forms import GetSettingsForm, GetResponseForm
+
+
+DISPLAY_TEXT = {
+    "polynomial": "Équations du second degré",
+    "power_a": "Intégrations de puissance",
+    "trig_a": "Intégrations trigonométriques",
+    "log": "Intégrations logarithmiques",
+}
 
 
 def index(request):
@@ -14,14 +22,42 @@ def index(request):
                 return show_questions(request, form)
         elif form_name == "get_response":
             form = GetResponseForm(request.POST, questions_dict=request.session["questions"])
-            form.data = request.POST
             if form.is_valid():
                 return show_results(request, form)
     return get_settings(request)
 
 
 def show_results(request, form):
-    return render(request, 'math_web/show_results.html')
+    questions_display = {}
+
+    for group, questions in form.questions_dict.items():
+        questions_display[group] = []
+        for i, question in enumerate(questions):
+            questions_display[group].append({})
+            questions_display[group][i]["question"] = question.get_mathjax_function()
+            if group != "polynomial":
+                questions_display[group][i]["solution"] = "\({}\)".format(question.solution)
+            else:
+                questions_display[group][i]["solution"] = question.mathjax_solution()
+
+            question_id = "{group}_{i}".format(group=group, i=i)
+            if group != "polynomial":
+                user_response = form.cleaned_data[question_id]
+                user_response_text = "\({}\)".format(user_response)
+            else:
+                user_response_nb_root = int(form.cleaned_data[question_id + "_nb_roots"])
+                user_response = [form.cleaned_data[question_id + "_x{}".format(i)]
+                                 for i in range(user_response_nb_root)]
+                user_response_text = RandomPolynomialSolver.get_mathjax_solution(user_response)
+
+            questions_display[group][i]["user_response"] = user_response_text
+            questions_display[group][i]["user_correct"] = user_response == question.solution
+
+    context = {
+        "questions": questions_display,
+        "text": DISPLAY_TEXT
+    }
+    return render(request, 'math_web/show_results.html', context)
 
 
 def show_questions(request, form):
@@ -67,12 +103,7 @@ def show_questions(request, form):
     request.session["questions"] = questions
     context = {
         "form": GetResponseForm(questions_dict=questions),
-        "text": {
-            "polynomial": "Équations du second degré",
-            "power_a": "Intégrations de puissance",
-            "trig_a": "Intégrations trigonométriques",
-            "log": "Intégrations logarithmiques",
-        }
+        "text": DISPLAY_TEXT
     }
     return render(request, 'math_web/show_questions.html', context)
 

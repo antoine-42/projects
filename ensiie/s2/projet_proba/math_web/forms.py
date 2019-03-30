@@ -26,14 +26,14 @@ class GetResponseForm(forms.Form):
 
     def __init__(self, *args, questions_dict=None, **kwargs):
         super(GetResponseForm, self).__init__(*args, **kwargs)
-        questions_dict = {key: [deserialize_solver_object(problem) for problem in problem_list]
-                          for key, problem_list
-                          in questions_dict.items()}
+        self.questions_dict = {key: [deserialize_solver_object(problem) for problem in problem_list]
+                               for key, problem_list
+                               in questions_dict.items()}
 
         question_n = 0
         self.fields_n2startpart = {}
         self.fields_n2part = []
-        for key, questions in questions_dict.items():
+        for key, questions in self.questions_dict.items():
             if "_b" not in key and "_c" not in key:
                 self.fields_n2startpart[question_n] = key
             for i, question in enumerate(questions):
@@ -45,14 +45,14 @@ class GetResponseForm(forms.Form):
                     question_n += 1
                     self.fields_n2part.append(key)
                 else:
-                    CHOICES = [('no_solution', 'Pas de solution'),
-                               ('1_solution', 'Une solution'),
-                               ('2_solutions', 'Deux solutions')]
+                    CHOICES = [(0, 'Pas de solution'),
+                               (1, 'Une solution'),
+                               (2, 'Deux solutions')]
                     curr_nb_answers_select = forms.ChoiceField(
                         label=question.get_mathjax_function(), choices=CHOICES,
                         widget=forms.RadioSelect(attrs={'class': 'custom-control-input'})
                     )
-                    self.fields["{id}_nb_questions".format(id=id)] = curr_nb_answers_select
+                    self.fields["{id}_nb_roots".format(id=id)] = curr_nb_answers_select
                     for xn in range(2):
                         curr_x_id = "{id}_x{xn}".format(id=id, xn=xn)
                         curr_xn_field = forms.FloatField(label="\(x_{xn}\)".format(xn=xn))

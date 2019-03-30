@@ -81,16 +81,20 @@ class PolynomialSolver:
     def get_mathjax_function(self):
         return "\({a:.2g}x^2 {b:+.2g}x {c:+.2g} = 0\)".format(a=self.a, b=self.b, c=self.c)
 
-    def get_mathjax_solution(self):
+    @staticmethod
+    def get_mathjax_solution(solutions):
         string = ""
-        if len(self.solution) > 0:
+        if len(solutions) > 0:
             string += "\("
-            for i, solution in enumerate(self.solution):
+            for i, solution in enumerate(solutions):
                 string += "x_{i} = {solution:.2g}, ".format(i=i, solution=solution)
             string = string[:-2] + "\)"
         else:
             string += "No root."
         return string
+
+    def mathjax_solution(self):
+        return PolynomialSolver.get_mathjax_solution(self.solution)
 
     def __str__(self):
         """Get a string representing the polynomial.

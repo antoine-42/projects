@@ -12,7 +12,6 @@ body{
     min-height: 100%;
 }
 #page_content{
-    overflow:auto;
     width: 80%;
     max-width: unset;
     padding: 0;

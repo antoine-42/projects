@@ -1,0 +1,18 @@
+#results{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
+#results h3{
+    grid-column: 1 / -1;
+}
+#results div.result_row{
+    grid-column: 1 / -1;
+}
+
+.user_correct{
+    color: #28a745;
+}
+.user_wrong{
+    color: #dc3545;
+}
