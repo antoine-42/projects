@@ -17,8 +17,10 @@
                 <p>{{ question.question }}</p>
                 <p>Solution: {{ question.solution }}</p>
                 <p class="{% if question.user_correct %}user_correct{% else %}user_wrong{% endif %}">Votre réponse: {{ question.user_response }}</p>
-                <p class="{% if question.user_correct %}user_correct{% else %}user_wrong{% endif %}">{% if question.user_correct %}+1 points{% else %}0 points{% endif %}</p>
+                <p class="{% if question.user_correct %}user_correct{% else %}user_wrong{% endif %}">{{ question.user_points }}/{{ question.question_points }}</p>
             {% endfor %}
         {% endfor %}
     </div>
+    {# For some reason some IDEs may not display all emojis. #}
+    <p class="{% if points.ratio < 0.2 %}user_wrong{% elif points.ratio > 0.8 %}user_correct{% endif %}">Total: {{ points.total_user }}/{{ points.total }}{% if points.ratio < 0.2 %} 😡{% elif points.ratio > 0.8 %} 👌{% endif %}</p>
 {% endblock content %}

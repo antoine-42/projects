@@ -24,6 +24,7 @@ class IntegrationSolver:
         else:
             self.b = b
         self.solution = None
+        self.points = 1.5
 
         self.solve()
 

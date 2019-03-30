@@ -19,6 +19,7 @@ class PolynomialSolver:
         self.c = c
         self.delta = None
         self.solution = None
+        self.points = 1
 
         self.compute_delta()
         self.compute_roots()

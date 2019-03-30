@@ -29,6 +29,8 @@ def index(request):
 
 def show_results(request, form):
     questions_display = {}
+    total_points = 0
+    total_user_points = 0
 
     for group, questions in form.questions_dict.items():
         questions_display[group] = []
@@ -52,9 +54,21 @@ def show_results(request, form):
 
             questions_display[group][i]["user_response"] = user_response_text
             questions_display[group][i]["user_correct"] = user_response == question.solution
+            questions_display[group][i]["question_points"] = question.points
+            if questions_display[group][i]["user_correct"]:
+                questions_display[group][i]["user_points"] = question.points
+                total_user_points += question.points
+            else:
+                questions_display[group][i]["user_points"] = 0
+            total_points += question.points
 
     context = {
         "questions": questions_display,
+        "points": {
+            "total": total_points,
+            "total_user": total_user_points,
+            "ratio": total_user_points / total_points
+        },
         "text": DISPLAY_TEXT
     }
     return render(request, 'math_web/show_results.html', context)
