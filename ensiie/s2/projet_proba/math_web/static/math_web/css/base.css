@@ -34,3 +34,7 @@ body{
 .footer p{
     margin: 0;
 }
+
+.error{
+    color: #dc3545;
+}

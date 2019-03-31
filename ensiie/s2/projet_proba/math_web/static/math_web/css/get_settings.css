@@ -10,7 +10,3 @@ form label{
 form input{
     grid-column: 2;
 }
-
-.error{
-    color: #dc3545;
-}

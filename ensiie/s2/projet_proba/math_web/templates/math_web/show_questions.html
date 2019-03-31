@@ -11,6 +11,14 @@
 
 {% block content %}
     <h2>Exercice</h2>
+    {% if form.errors %}
+        <div id="errors">
+            <div class="inner">
+                <p class="error">Les paramètres entrés ne sont pas corrects</p>
+                {{ form.non_field_errors }}
+            </div>
+        </div>
+    {% endif %}
     <form action="./" method="post" id="submit_results_form">
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
