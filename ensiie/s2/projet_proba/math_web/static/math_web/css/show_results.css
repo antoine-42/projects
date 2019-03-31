@@ -1,13 +1,15 @@
 #results{
     display: grid;
+    grid-gap: 10px;
     grid-template-columns: auto auto auto auto;
+    align-items: center;
 }
 
 #results h3{
     grid-column: 1 / -1;
 }
-#results div.result_row{
-    grid-column: 1 / -1;
+#results p{
+    margin: 0;
 }
 
 .user_correct{

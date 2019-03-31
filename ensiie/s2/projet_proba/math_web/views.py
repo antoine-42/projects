@@ -82,7 +82,7 @@ def show_questions(request, form):
 
     n1, n2 = get_repartition(nb_questions, [p1, p2])
     n21, n22, n23 = get_repartition(n2, [p21, p22, p23])
-    n21a, n21b = get_repartition(n22, [1/2]*2)
+    n21a, n21b = get_repartition(n21, [1/2]*2)
     n22a, n22b, n22c = get_repartition(n22, [1/3]*3)
 
     problems = {

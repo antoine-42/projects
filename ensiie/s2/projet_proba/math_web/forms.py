@@ -4,7 +4,7 @@ from math_web.generators import deserialize_solver_object
 
 class GetSettingsForm(forms.Form):
     form_name = forms.CharField(widget=forms.HiddenInput(), initial="get_settings")
-    nb_questions = forms.IntegerField(label="Nombre de questions", min_value=0, max_value=42, initial=10)
+    nb_questions = forms.IntegerField(label="Nombre de questions", min_value=1, max_value=100, initial=10)
     p1 = forms.FloatField(label="\(p_1\)", min_value=0, max_value=1, initial=0.2)
     p2 = forms.FloatField(label="\(p_2\)", min_value=0, max_value=1, initial=0.8)
     p21 = forms.FloatField(label="\(p_{21}\)", min_value=0, max_value=1, initial=0.2)
