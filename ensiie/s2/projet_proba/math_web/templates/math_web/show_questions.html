@@ -21,7 +21,7 @@
             {% endif %}
             {{ field.errors }}
             {% if field.field.widget.input_type == "radio" %}
-                <label class="question_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label class="question_label" for="{{ field.id_for_label }}" title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}">{{ field.label }}</label>
                 <div class="solution_number_radios">
                     {% for radio in field %}
                         <div class="custom-control custom-radio custom-control-inline">
@@ -32,10 +32,10 @@
                 </div>
             {% else %}
                 {% if form.fields_n2part|get_item:forloop.counter0 != 'polynomial' %}
-                    <label class="question_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label class="question_label" for="{{ field.id_for_label }}" title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}">{{ field.label }}</label>
                     {{ field }}
                 {% else %}
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}" title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}">{{ field.label }}</label>
                     {{ field }}
                 {% endif %}
             {% endif %}

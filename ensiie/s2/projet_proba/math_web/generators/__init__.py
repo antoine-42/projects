@@ -1,5 +1,5 @@
 from math_web.generators.generators import generate_uniform_random_number, deserialize_solver_object
 from math_web.generators.polynomial import RandomPolynomialSolver
-from math_web.generators.integration import PowerAIntegrationSolver, PowerBIntegrationSolver
+from math_web.generators.integration import IntegrationSolver, PowerAIntegrationSolver, PowerBIntegrationSolver
 from math_web.generators.integration import TrigonometricAIntegrationSolver, TrigonometricBIntegrationSolver, TrigonometricCIntegrationSolver
 from math_web.generators.integration import LogarithmicIntegrationSolver

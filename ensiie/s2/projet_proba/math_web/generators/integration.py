@@ -4,9 +4,10 @@ import math
 import numpy
 
 import math_web.generators
+from math_web.generators.solver import Solver
 
 
-class IntegrationSolver:
+class IntegrationSolver(Solver):
     """Compute the solution of an integral.
     """
     def __init__(self, a, b):
@@ -15,6 +16,7 @@ class IntegrationSolver:
         :param a: float
         :param b: float
         """
+        Solver.__init__(self)
         if a is None:
             self.a = math_web.generators.generate_uniform_random_number(-10, 10, 0.5)
         else:
@@ -37,8 +39,12 @@ class IntegrationSolver:
         string = "\\(I=\\int_{{{a:.2g}}} ^ {{{b:.2g}}}<>dx\\)".format(a=self.a, b=self.b)
         return string
 
-    def get_mathjax_solution(self):
-        return "\\({solution:.2g}\\)".format(solution=self.solution)
+    @staticmethod
+    def get_mathjax_solution(solution):
+        return "\\({solution:.2g}\\)".format(solution=solution)
+
+    def mathjax_solution(self):
+        return IntegrationSolver.get_mathjax_solution(self.solution)
 
     def __str__(self):
         """Get a string representing the integral.
@@ -88,9 +94,8 @@ class PowerAIntegrationSolver(IntegrationSolver):
     def solve(self):
         """Solve the integral.
         """
-        # + 0j: Convert to complex to avoid errors when alpha is not an integer
-        member1 = numpy.power(self.b * self.c - self.d + 0j, self.alpha + 1)
-        member2 = numpy.power(self.a * self.c - self.d + 0j, self.alpha + 1)
+        member1 = numpy.power(self.b * self.c - self.d, self.alpha + 1)
+        member2 = numpy.power(self.a * self.c - self.d, self.alpha + 1)
         self.solution = \
             1 / (self.c * (self.alpha + 1)) \
             * (
@@ -298,11 +303,11 @@ class LogarithmicIntegrationSolver(IntegrationSolver):
         else:
             self.c = c
         if a is None:
-            self.a = math_web.generators.generate_uniform_random_number(-10, 10, 0.5, [0])
+            self.a = math_web.generators.generate_uniform_random_number(0, 9.5, 0.5, [0])
         else:
             self.a = a
         if b is None:
-            self.b = math_web.generators.generate_uniform_random_number(-10, 10, 0.5, [0, self.a])
+            self.b = math_web.generators.generate_uniform_random_number(self.a, 10, 0.5, [0, self.a])
         else:
             self.b = b
         IntegrationSolver.__init__(self, self.a, self.b)

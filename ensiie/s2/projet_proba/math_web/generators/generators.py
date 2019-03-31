@@ -1,4 +1,5 @@
 import numpy
+
 from math_web.generators.polynomial import PolynomialSolver
 from math_web.generators.integration import PowerAIntegrationSolver, PowerBIntegrationSolver
 from math_web.generators.integration import TrigonometricAIntegrationSolver, TrigonometricBIntegrationSolver, TrigonometricCIntegrationSolver

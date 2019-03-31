@@ -10,6 +10,7 @@ class GetSettingsForm(forms.Form):
     p21 = forms.FloatField(label="\(p_{21}\)", min_value=0, max_value=1, initial=0.2)
     p22 = forms.FloatField(label="\(p_{22}\)", min_value=0, max_value=1, initial=0.5)
     p23 = forms.FloatField(label="\(p_{23}\)", min_value=0, max_value=1, initial=0.3)
+    cheat = forms.CharField(widget=forms.HiddenInput(), initial="nope")
 
     def clean(self):
         pass
@@ -24,7 +25,7 @@ class GetSettingsForm(forms.Form):
 class GetResponseForm(forms.Form):
     form_name = forms.CharField(widget=forms.HiddenInput(), initial="get_response")
 
-    def __init__(self, *args, questions_dict=None, **kwargs):
+    def __init__(self, *args, questions_dict=None, cheat=False, **kwargs):
         super(GetResponseForm, self).__init__(*args, **kwargs)
         self.questions_dict = {key: [deserialize_solver_object(problem) for problem in problem_list]
                                for key, problem_list
@@ -33,6 +34,8 @@ class GetResponseForm(forms.Form):
         question_n = 0
         self.fields_n2startpart = {}
         self.fields_n2part = []
+        if cheat:
+            self.fields_n2cheat = []
         for key, questions in self.questions_dict.items():
             if "_b" not in key and "_c" not in key:
                 self.fields_n2startpart[question_n] = key
@@ -44,6 +47,8 @@ class GetResponseForm(forms.Form):
                     self.fields[id] = curr_response_field
                     question_n += 1
                     self.fields_n2part.append(key)
+                    if cheat:
+                        self.fields_n2cheat.append(question.mathjax_solution())
                 else:
                     CHOICES = [(0, 'Pas de solution'),
                                (1, 'Une solution'),
@@ -60,4 +65,6 @@ class GetResponseForm(forms.Form):
                         self.fields[curr_x_id] = curr_xn_field
                     question_n += 3
                     self.fields_n2part += [key] * 3
+                    if cheat:
+                        self.fields_n2cheat += [question.mathjax_solution()] * 3
 

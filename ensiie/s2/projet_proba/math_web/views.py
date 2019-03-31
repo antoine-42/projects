@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 import math_web.generators
-from math_web.generators import RandomPolynomialSolver
+from math_web.generators import RandomPolynomialSolver, IntegrationSolver
 from .forms import GetSettingsForm, GetResponseForm
 
 
@@ -37,15 +37,12 @@ def show_results(request, form):
         for i, question in enumerate(questions):
             questions_display[group].append({})
             questions_display[group][i]["question"] = question.get_mathjax_function()
-            if group != "polynomial":
-                questions_display[group][i]["solution"] = "\({}\)".format(question.solution)
-            else:
-                questions_display[group][i]["solution"] = question.mathjax_solution()
+            questions_display[group][i]["solution"] = question.mathjax_solution()
 
             question_id = "{group}_{i}".format(group=group, i=i)
             if group != "polynomial":
                 user_response = form.cleaned_data[question_id]
-                user_response_text = "\({}\)".format(user_response)
+                user_response_text = IntegrationSolver.get_mathjax_solution(user_response)
             else:
                 user_response_nb_root = int(form.cleaned_data[question_id + "_nb_roots"])
                 user_response = [form.cleaned_data[question_id + "_x{}".format(i)]
@@ -53,7 +50,7 @@ def show_results(request, form):
                 user_response_text = RandomPolynomialSolver.get_mathjax_solution(user_response)
 
             questions_display[group][i]["user_response"] = user_response_text
-            questions_display[group][i]["user_correct"] = user_response == question.solution
+            questions_display[group][i]["user_correct"] = question.check_results(user_response, 2)
             questions_display[group][i]["question_points"] = question.points
             if questions_display[group][i]["user_correct"]:
                 questions_display[group][i]["user_points"] = question.points
@@ -81,6 +78,7 @@ def show_questions(request, form):
     p21 = form.cleaned_data['p21']
     p22 = form.cleaned_data['p22']
     p23 = form.cleaned_data['p23']
+    cheat = form.cleaned_data['cheat']
 
     n1, n2 = get_repartition(nb_questions, [p1, p2])
     n21, n22, n23 = get_repartition(n2, [p21, p22, p23])
@@ -116,7 +114,7 @@ def show_questions(request, form):
                  in problems.items()}
     request.session["questions"] = questions
     context = {
-        "form": GetResponseForm(questions_dict=questions),
+        "form": GetResponseForm(questions_dict=questions, cheat=cheat == "yup"),
         "text": DISPLAY_TEXT
     }
     return render(request, 'math_web/show_questions.html', context)

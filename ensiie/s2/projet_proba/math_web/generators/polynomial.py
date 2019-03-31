@@ -2,9 +2,10 @@ import math
 import numpy
 
 import math_web.generators
+from math_web.generators.solver import Solver
 
 
-class PolynomialSolver:
+class PolynomialSolver(Solver):
     """Compute the roots of a polynomial function.
     """
     def __init__(self, a, b, c):
@@ -14,6 +15,8 @@ class PolynomialSolver:
         :param b: float
         :param c: float
         """
+        Solver.__init__(self)
+
         self.a = a
         self.b = b
         self.c = c
