@@ -1,5 +1,16 @@
 form{
-    grid-template-columns: min-content auto;
+    grid-template-columns: min-content auto auto;
 
     justify-items: end;
+}
+
+form label{
+    grid-column: 1;
+}
+form input{
+    grid-column: 2;
+}
+
+.error{
+    color: #dc3545;
 }

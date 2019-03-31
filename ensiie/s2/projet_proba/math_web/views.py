@@ -20,14 +20,24 @@ def index(request):
             form = GetSettingsForm(request.POST)
             if form.is_valid():
                 return show_questions(request, form)
+            else:
+                return get_settings(request, form)
         elif form_name == "get_response":
             form = GetResponseForm(request.POST, questions_dict=request.session["questions"])
             if form.is_valid():
                 return show_results(request, form)
+            else:
+                return show_questions(request, form)
     return get_settings(request)
 
 
 def show_results(request, form):
+    """Display a page with the user's responses and the solutions.
+
+    :param request:
+    :param form:
+    :return:
+    """
     questions_display = {}
     total_points = 0
     total_user_points = 0
@@ -72,6 +82,12 @@ def show_results(request, form):
 
 
 def show_questions(request, form):
+    """Display a page with a form asking user's responses to the questions.
+
+    :param request:
+    :param form:
+    :return:
+    """
     nb_questions = form.cleaned_data['nb_questions']
     p1 = form.cleaned_data['p1']
     p2 = form.cleaned_data['p2']
@@ -173,13 +189,16 @@ def remove_from_lowest(repartition):
     return repartition
 
 
-def get_settings(request):
-    """Display a form asking the
+def get_settings(request, form=None):
+    """Display a page with a form asking the problem settings.
 
+    :param form:
     :param request:
     :return:
     """
+    if form is None:
+        form = GetSettingsForm()
     context = {
-        "form": GetSettingsForm(),
+        "form": form,
     }
     return render(request, 'math_web/get_settings.html', context)

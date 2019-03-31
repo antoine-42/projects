@@ -12,8 +12,33 @@ class GetSettingsForm(forms.Form):
     p23 = forms.FloatField(label="\(p_{23}\)", min_value=0, max_value=1, initial=0.3)
     cheat = forms.CharField(widget=forms.HiddenInput(), initial="nope")
 
+    p_array = ["p1", "p2", "p21", "p22", "p23"]
+
+    @staticmethod
+    def validate_p(data):
+        if not isinstance(data, float) or data is None:
+            return False
+        elif not 0 <= data <= 1:
+            return False
+        return True
+
     def clean(self):
-        pass
+        cleaned_data = super().clean()
+        curr_p_array = [cleaned_data.get(p) for p in self.p_array]
+        for p in curr_p_array:
+            if not GetSettingsForm.validate_p(p):
+                return
+        p1, p2, p21, p22, p23 = curr_p_array
+
+        errors = []
+        if p1 + p2 != 1:
+            errors.append(forms.ValidationError("\(p_1 + p_2 = %(p1)s + %(p2)s \\neq 1.\)", code='invalid', params={'p1': p1, 'p2': p2}))
+
+        if p21 + p22 + p23 != 1:
+            errors.append(forms.ValidationError("\(p_{21} + p_{22} + p_{23} = %(p21)s + %(p22)s + %(p23)s \\neq 1.\)", code='invalid', params={'p21': p21, 'p22': p22, 'p23': p23}))
+
+        if len(errors) > 0:
+            raise forms.ValidationError(errors)
 
     def __init__(self, *args, **kwargs):
         super(GetSettingsForm, self).__init__(*args, **kwargs)
@@ -62,6 +87,7 @@ class GetResponseForm(forms.Form):
                         curr_x_id = "{id}_x{xn}".format(id=id, xn=xn)
                         curr_xn_field = forms.FloatField(label="\(x_{xn}\)".format(xn=xn))
                         curr_xn_field.widget.attrs['class'] = 'form-control polynomial_solution'
+                        curr_xn_field.required = False
                         self.fields[curr_x_id] = curr_xn_field
                     question_n += 3
                     self.fields_n2part += [key] * 3

@@ -5,12 +5,29 @@
     <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/get_settings.css' %}">
 {% endblock stylesheets %}
 
+{% block scripts %}
+{% endblock scripts %}
+
 {% block content %}
     <h2>Paramètres de la génération</h2>
+    {% if form.errors %}
+        <div id="errors">
+            <div class="inner">
+                <p class="error">Les paramètres entrés ne sont pas corrects</p>
+                {{ form.non_field_errors }}
+            </div>
+        </div>
+    {% endif %}
     <form action="./" method="post" id="get_settings_form">
         {% csrf_token %}
-        {{ form }}
-        <input type="range" min="0" max="100" value="50" class="slider custom-range" id="myRange">
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        {% endfor %}
         <input type="submit" value="OK" id="submit_button" class="btn btn-primary">
     </form>
 {% endblock content %}

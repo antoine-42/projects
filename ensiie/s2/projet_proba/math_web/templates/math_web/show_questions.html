@@ -6,12 +6,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'math_web/css/show_questions.css' %}">
 {% endblock stylesheets %}
 
+{% block scripts %}
+{% endblock scripts %}
+
 {% block content %}
     <h2>Exercice</h2>
     <form action="./" method="post" id="submit_results_form">
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
-        {{ hidden }}
+            {{ hidden }}
         {% endfor %}
         {% for field in form.visible_fields %}
             {% if forloop.counter0 in form.fields_n2startpart %}
@@ -19,9 +22,8 @@
                     <h3>{{ text|get_item:title }}</h3>
                 {% endwith %}
             {% endif %}
-            {{ field.errors }}
             {% if field.field.widget.input_type == "radio" %}
-                <label class="question_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label class="question_label" for="{{ field.id_for_label }}" {% if form.fields_n2cheat|get_item:forloop.counter0 != None %}title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}"{% endif %}>{{ field.label }}</label>
                 <div class="solution_number_radios">
                     {% for radio in field %}
                         <div class="custom-control custom-radio custom-control-inline">
@@ -32,13 +34,14 @@
                 </div>
             {% else %}
                 {% if form.fields_n2part|get_item:forloop.counter0 != 'polynomial' %}
-                    <label class="question_label" for="{{ field.id_for_label }}" data-html="true" data-toggle="tooltip" data-placement="left" title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}">{{ field.label }}</label>
+                    <label class="question_label" for="{{ field.id_for_label }}" {% if form.fields_n2cheat|get_item:forloop.counter0 != None %}title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}"{% endif %}>{{ field.label }}</label>
                     {{ field }}
                 {% else %}
-                    <label for="{{ field.id_for_label }}" data-html="true" data-toggle="tooltip" data-placement="left" title="{{ form.fields_n2cheat|get_item:forloop.counter0 }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                 {% endif %}
             {% endif %}
+            {{ field.errors }}
         {% endfor %}
         <input type="submit" value="OK" id="submit_button" class="btn btn-primary">
     </form>
