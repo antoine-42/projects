@@ -17,7 +17,7 @@ if __name__ == "__main__":
     graphs = [ga0, ga1, ga2, ga3, ga5, ga10, ga15, ga20, ga21]
     for ga in graphs:
         g = Graph(ga)
-        print(g.array)
+        print(g.node_list)
         print(g.adjacency_matrix)
         print(g.edge_levels)
         print(g.grundy_levels)
