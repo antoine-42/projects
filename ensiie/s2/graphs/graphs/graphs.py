@@ -1,5 +1,6 @@
 """Classes for representing and making computations on graphs.
 
+You need a good understanding of list comprehension to understand some parts of this code.
 """
 
 
@@ -33,10 +34,15 @@ class Graph:
         self.line_graph = None
 
         self.make_adjacency_matrix()
+
+    def run_algorithms(self):
+        """Runs all available algorithms.
+
+        :return:
+        """
         self.edge_leveling()
         self.grundy()
         self.roy_warshall()
-        self.make_nodes()
         self.welsh_powel()
 
     def make_adjacency_matrix(self):
@@ -74,26 +80,13 @@ class Graph:
                              for i in range(self.graph_width)
                              if self.adjacency_matrix[edge][i] == 1]
                 curr_result += [edge for edge in edge_next
-                                if not Graph.object_in_sublist(edge, self.edge_levels)
+                                if not any(edge in sl for sl in self.edge_levels)
                                 and edge not in curr_result]
             if len(curr_result) > 0:
                 self.edge_levels.append(curr_result)
         if self.edge_levels == [[]]:
             # Graph is a loop, so every edge is at level 0
             self.edge_levels = [[i for i in range(self.graph_width)]]
-
-    @staticmethod
-    def object_in_sublist(o, l):
-        """Checks if an object is in a sublist of l.
-
-        :param o: *
-        :param l: [[]]
-        :return: bool
-        """
-        for sublist in l:
-            if o in sublist:
-                return True
-        return False
 
     def grundy(self):
         """Compute the Grundy algorithm for the graph.
@@ -127,12 +120,13 @@ class Graph:
                       for i, line in enumerate(self.adjacency_matrix)]
 
     def welsh_powel(self):
-        """Compute the Welsh-Powel algorithm for the graph.
+        """Compute the Welsh-Powel algorithm for the graph: colors all nodes so that 2 colors may not touch.
 
         While all nodes have not been colored:
             Take a new color
             Try to assign it to as many node as possible, starting with the ones with the most neighbors.
         """
+        self.make_nodes()
         uncolored_nodes = len(self.nodes)
         curr_color = 0
         while uncolored_nodes > 0:
@@ -151,7 +145,7 @@ class Graph:
     def make_line_graph(self):
         """Make a line graph from the graph
 
-        in:  [[1, 2, 3], [4], [3], [4], []]        [[0, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
+        in:  [[1, 2, 3], [4], [3], [4], []]            [[0, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
         out: [[1, 2, 3], [2, 4], [4, 5], [5], [5], []] [[0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 1, 0], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1]]
         """
         nodes = [(i, destination)
@@ -166,6 +160,26 @@ class Graph:
 
         self.line_graph = Graph(line_graph_node_list)
 
+    def __repr__(self):
+        """String representation of a Graph, using all computed properties.
+
+        :return: str
+        """
+        result = "Node list: {}\n".format(self.node_list)
+        result += "Adjacency matrix: {}\n".format(self.adjacency_matrix)
+
+        if len(self.edge_levels[0]) > 0:
+            result += "Edge levels: {}\n".format(self.edge_levels)
+        if len(self.grundy_levels) > 0:
+            result += "Grundy levels: {}\n".format(self.grundy_levels)
+        if self.roy_warshall_result is not None:
+            result += "Roy-Warshall result: {}\n".format(self.roy_warshall_result)
+        if len(self.nodes) > 0:
+            result += "Nodes: {}\n".format([str(node) for node in self.nodes])
+        if self.line_graph is not None:
+            result += "Line graph: \n    {}".format(str(self.line_graph).replace("\n", "\n    ")[:-5])
+
+        return result
 
 class Node:
     """Class for representing a node of a graph.

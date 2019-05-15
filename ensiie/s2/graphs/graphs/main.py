@@ -15,13 +15,11 @@ if __name__ == "__main__":
     ga21 = [[7, 5, 3], [6, 4, 2], [7, 5, 1], [6, 4, 0], [7, 3, 1], [6, 2, 0], [5, 3, 1], [4, 2, 0]]
     ga22 = [[1, 2, 3], [4], [3], [4], []]
 
-    graphs = [ga22]
-    for ga in graphs:
+    graphs = [ga0, ga1, ga2, ga3, ga5, ga10, ga15, ga20, ga21, ga22]
+    for i, ga in enumerate(graphs):
         g = Graph(ga)
+        g.run_algorithms()
         g.make_line_graph()
-        print(g.node_list)
-        print(g.adjacency_matrix)
-        print(g.edge_levels)
-        print(g.grundy_levels)
-        print(g.roy_warshall_result)
-        print([str(node) for node in g.nodes])
+        g.line_graph.run_algorithms()
+        print("\nGraph {}:".format(i))
+        print(g)
