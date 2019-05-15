@@ -1,4 +1,4 @@
-"""
+"""Classes for representing and making computations on graphs.
 
 """
 
@@ -13,8 +13,7 @@ class Graph:
     grundy_levels: List of how far each node is from a source: [0, 1, 1, 2, 3].
     roy_warshall_result:
     nodes: List of the Nodes contained in the graph.
-    line_graph: Graph where the nodes are the edges of the initial graph.
-
+    line_graph: Graph where the nodes are the edges of the initial graph: [[1, 2], [2], [3], [4], []].
     """
     def __init__(self, node_list):
         """Graph initializer.
@@ -31,7 +30,7 @@ class Graph:
         self.grundy_levels = []
         self.roy_warshall_result = None
         self.nodes = []
-        self.line_graph = []
+        self.line_graph = None
 
         self.make_adjacency_matrix()
         self.edge_leveling()
@@ -39,7 +38,6 @@ class Graph:
         self.roy_warshall()
         self.make_nodes()
         self.welsh_powel()
-        self.make_line_graph()
 
     def make_adjacency_matrix(self):
         """Compute the adjacency matrix of the graph.
@@ -153,9 +151,21 @@ class Graph:
     def make_line_graph(self):
         """Make a line graph from the graph
 
-        :return: Graph
+        in:  [[1, 2, 3], [4], [3], [4], []]        [[0, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
+        out: [[1, 2, 3], [2, 4], [4, 5], [5], [5], []] [[0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 1, 0], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1]]
         """
-        pass
+        nodes = [(i, destination)
+                 for i, destinations in enumerate(self.node_list)
+                 for destination in destinations]
+
+        line_graph_node_dict = {i: [] for i in range(len(nodes))}
+        for i, node in enumerate(nodes):
+            for j, destination_node in enumerate(nodes[i + 1:]):
+                if not set(destination_node).isdisjoint(node):
+                    line_graph_node_dict[i].append(i + j + 1)
+        line_graph_node_list = list(line_graph_node_dict.values())
+
+        self.line_graph = Graph(line_graph_node_list)
 
 
 class Node:

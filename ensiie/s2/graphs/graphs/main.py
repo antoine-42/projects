@@ -13,10 +13,12 @@ if __name__ == "__main__":
             [4, 6, 7, 9], [1, 2, 5, 9], [0, 3, 5, 6, 9], [2, 5, 9]]
     ga20 = [[1], [2], [3], []]
     ga21 = [[7, 5, 3], [6, 4, 2], [7, 5, 1], [6, 4, 0], [7, 3, 1], [6, 2, 0], [5, 3, 1], [4, 2, 0]]
+    ga22 = [[1, 2, 3], [4], [3], [4], []]
 
-    graphs = [ga0, ga1, ga2, ga3, ga5, ga10, ga15, ga20, ga21]
+    graphs = [ga22]
     for ga in graphs:
         g = Graph(ga)
+        g.make_line_graph()
         print(g.node_list)
         print(g.adjacency_matrix)
         print(g.edge_levels)
