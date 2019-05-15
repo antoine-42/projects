@@ -158,11 +158,10 @@ class Graph:
                  for i, destinations in enumerate(self.node_list)
                  for destination in destinations]
 
-        line_graph_node_dict = {i: [] for i in range(len(nodes))}
-        for i, node in enumerate(nodes):
-            for j, destination_node in enumerate(nodes[i + 1:]):
-                if not set(destination_node).isdisjoint(node):
-                    line_graph_node_dict[i].append(i + j + 1)
+        line_graph_node_dict = {i: [i + j + 1
+                                    for j, destination_node in enumerate(nodes[i + 1:])
+                                    if not set(destination_node).isdisjoint(node)]
+                                for i, node in enumerate(nodes)}
         line_graph_node_list = list(line_graph_node_dict.values())
 
         self.line_graph = Graph(line_graph_node_list)
