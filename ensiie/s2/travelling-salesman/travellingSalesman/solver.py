@@ -3,8 +3,6 @@ import itertools
 import math
 import sys
 
-from travellingSalesman.point import Point
-
 
 class Path:
     """Representation of a path.
@@ -30,7 +28,7 @@ class Path:
         self.length = 0
         points_len_compute = self.points + (self.points[0], )
         for i in range(len(points_len_compute) - 1):
-            self.length += points_len_compute[i].cache_distance(points_len_compute[i + 1])
+            self.length += points_len_compute[i].distance(points_len_compute[i + 1])
             # If we know that it's the wrong path, don't keep going.
             if self.length > Path.lowest_length:
                 return
@@ -106,7 +104,6 @@ class OptimalSolver(Solver):
 
         :return: Path
         """
-        self.calculate_distances()
         best_length = sys.maxsize
         best_path = None
         for route in itertools.permutations(self.points[1:]):
@@ -116,12 +113,6 @@ class OptimalSolver(Solver):
                     best_path = curr_path
                     best_length = curr_path.length
         return best_path
-
-    def calculate_distances(self):
-        for src in self.points:
-            for dst in self.points[src.id+1:]:
-                Point.distances[src.id][dst.id] = src.distance(dst)
-                Point.distances[dst.id][src.id] = Point.distances[src.id][dst.id]
 
 
 class HeuristicSolver(Solver):

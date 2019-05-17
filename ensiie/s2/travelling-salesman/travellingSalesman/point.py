@@ -1,10 +1,10 @@
 import math
+import functools
 
 
 class Point:
     """Representation of a point.
     """
-    distances = {}
 
     def __init__(self, n, x, y):
         """Class constructor.
@@ -17,14 +17,7 @@ class Point:
         self.x = x
         self.y = y
 
-    def cache_distance(self, other):
-        """Compute the distance between this point and another one, with cache.
-
-        :param other: Point
-        :return: float
-        """
-        return Point.distances[self.id][other.id]
-
+    @functools.lru_cache(maxsize=1000000)
     def distance(self, other):
         """Compute the distance between this point and another one.
 

@@ -12,7 +12,7 @@ class Graph:
     adjacency_matrix: Adjacency matrix of the graph: [[0, 1, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]].
     edge_levels: List of how far each node is from a source: [[0], [1, 2], [3], [4]].
     grundy_levels: List of how far each node is from a source: [0, 1, 1, 2, 3].
-    roy_warshall_result:
+    roy_warshall_result: Adjacency matrix where each node is linked to its children.
     nodes: List of the Nodes contained in the graph.
     line_graph: Graph where the nodes are the edges of the initial graph: [[1, 2], [2], [3], [4], []].
     """
@@ -38,7 +38,6 @@ class Graph:
     def run_algorithms(self):
         """Runs all available algorithms.
 
-        :return:
         """
         self.edge_leveling()
         self.grundy()
@@ -59,10 +58,10 @@ class Graph:
         """
         # Don't pollute the adjacency matrix
         self.roy_warshall_result = [list(line) for line in self.adjacency_matrix]
-        for i, line in enumerate(self.adjacency_matrix):
+        for i, line in enumerate(self.roy_warshall_result):
             for j, cell in enumerate(line):
                 if cell == 1:
-                    new_children = self.adjacency_matrix[j]
+                    new_children = self.roy_warshall_result[j]
                     for k in range(len(new_children)):
                         if new_children[k] == 1:
                             self.roy_warshall_result[i][k] = 1
@@ -145,8 +144,9 @@ class Graph:
     def make_line_graph(self):
         """Make a line graph from the graph
 
-        in:  [[1, 2, 3], [4], [3], [4], []]            [[0, 1, 1, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
-        out: [[1, 2, 3], [2, 4], [4, 5], [5], [5], []] [[0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 1, 0], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1]]
+        in:  [[1, 2, 3], [4], [3], [4], []]
+        tmp: [(0, 1), (0, 2), (0, 3), (1, 4), (2, 3), (3, 4)]
+        out: [[1, 2, 3], [2, 4], [4, 5], [5], [5], []]
         """
         nodes = [(i, destination)
                  for i, destinations in enumerate(self.node_list)
