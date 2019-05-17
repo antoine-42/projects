@@ -26,7 +26,8 @@ class Main:
         self.solution = solver.solve()
 
         Writer(self.output_file, self.solution, start_time)
-        plot(self.input_file, "{}-1".format("-".join([str(s + 1) for s in self.solution.get_order()])))
+        solution_text = "{}-1".format("-".join([str(s + 1) for s in self.solution.get_order()]))
+        plot(self.input_file, solution_text)
 
     def read_args(self):
         """Read the arguments.
