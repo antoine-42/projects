@@ -146,9 +146,9 @@ class ChristofidesSolver(Solver):
         """Make a distance matrix with the points.
 
         """
-        self.distance_matrix = [[src.distance(dst)
-                                 for dst in self.vertices[src.id + 1:]]
-                                for src in self.vertices]
+        for src in self.vertices:
+            for dst in self.vertices[src.id+1:]:
+                self.distance_matrix[src.id][dst.id] = src.distance(dst)
 
     def make_min_spanning_tree(self):
         """Make a minimum spanning tree with Kruskal's algorithm.
