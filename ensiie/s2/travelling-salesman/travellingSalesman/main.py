@@ -22,7 +22,7 @@ class Main:
 
         Point.distances = [[None] * len(self.points) for i in range(len(self.points))]
 
-        solver = travellingSalesman.solver.OptimalSolver(self.points)
+        solver = travellingSalesman.solver.ChristofidesSolver(self.points)
         self.solution = solver.solve()
 
         Writer(self.output_file, self.solution, start_time)

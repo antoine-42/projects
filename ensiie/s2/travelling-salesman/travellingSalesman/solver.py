@@ -83,7 +83,8 @@ class Solver(abc.ABC):
 
         :param points: [Point]
         """
-        self.points = points
+        self.vertices = points
+        self.graph_size = len(self.vertices)
 
     @abc.abstractmethod
     def solve(self):
@@ -91,6 +92,13 @@ class Solver(abc.ABC):
 
 
 class OptimalSolver(Solver):
+    """Finds the optimal path by computing the length of every path.
+
+    Run time:
+        test10.csv: 0.5317709445953369 seconds
+        test4.csv: 0.0020487308502197266 seconds
+        burma14.csv: 3.4314851244952944 hours
+    """
     def __init__(self, points):
         """Class constructor.
 
@@ -106,20 +114,156 @@ class OptimalSolver(Solver):
         """
         best_length = sys.maxsize
         best_path = None
-        for route in itertools.permutations(self.points[1:]):
+        for route in itertools.permutations(self.vertices[1:]):
             if route[0].id < route[-1].id:  # No mirror
-                curr_path = Path((self.points[0], ) + route)
+                curr_path = Path((self.vertices[0],) + route)
                 if curr_path.length < best_length:
                     best_path = curr_path
                     best_length = curr_path.length
         return best_path
 
 
-class HeuristicSolver(Solver):
-    def solve(self):
-        pass
-
-
 class ChristofidesSolver(Solver):
+    """Implementation of the Christofides algorithm.
+
+    """
+    def __init__(self, points):
+        super().__init__(points)
+        self.distance_matrix = [[0 for j in range(self.graph_size)] for i in range(self.graph_size)]
+        self.min_spanning_tree = []
+        self.odd_degree_vertexes = []
+        self.min_weight_matching = []
+
     def solve(self):
+        self.make_distance_matrix()
+        self.make_min_spanning_tree()
+        self.find_odd_degree_vertices()
+        self.find_min_weight_matching()
+        self.make_eulerian_circuit()
+        self.make_hamiltonian_circuit()
+
+    def make_distance_matrix(self):
+        """Make a distance matrix with the points.
+
+        """
+        self.distance_matrix = [[src.distance(dst)
+                                 for dst in self.vertices[src.id + 1:]]
+                                for src in self.vertices]
+
+    def make_min_spanning_tree(self):
+        """Make a minimum spanning tree with Kruskal's algorithm.
+        Maybe not the best, but it works, and is simple enough.
+
+        Make a group from each vertex.
+        Sort the edges by their length.
+        For every edge:
+            If this edge connects two unconnected groups, add it to the minimum spanning tree.
+            Merge the groups.
+            Stop when there is only one group.
+        """
+        edges = [Edge(x, y, cell)
+                 for y, line in enumerate(self.distance_matrix)
+                 for x, cell in enumerate(line)
+                 if cell > 0]
+        edges = sorted(edges)
+
+        groups = ConnectedGroups([vertex.id for vertex in self.vertices])
+        for edge in edges:
+            if not groups.elements_in_same_group(edge.vertex1, edge.vertex2):
+                groups.merge_elements_groups(edge.vertex1, edge.vertex2)
+                self.min_spanning_tree.append(edge)
+            if len(groups) == 1:
+                break
+
+    def find_odd_degree_vertices(self):
+        """Make a list of the vertices with an odd degree.
+
+        """
+        degrees = [0 for i in range(self.graph_size)]
+        for edge in self.min_spanning_tree:
+            degrees[edge.vertex1] += 1
+            degrees[edge.vertex2] += 1
+
+        self.odd_degree_vertexes = [i
+                                    for i, degree in enumerate(degrees)
+                                    if degree % 2 != 0]
+
+    def find_min_weight_matching(self):
+        """
+
+        """
+        edges = [Edge(x, y, cell)
+                 for y, line in enumerate(self.distance_matrix)
+                 for x, cell in enumerate(line)
+                 if cell > 0 and cell in self.odd_degree_vertexes]
+        edges = sorted(edges)
+
+        groups = ConnectedGroups(self.odd_degree_vertexes)
+        for edge in edges:
+            if not groups.elements_in_same_group(edge.vertex1, edge.vertex2) \
+                    and len(groups.get_element_group(edge.vertex1)) == 1 \
+                    and len(groups.get_element_group(edge.vertex2)) == 1:
+                groups.merge_elements_groups(edge.vertex1, edge.vertex2)
+                self.min_weight_matching.append(edge)
+            if len(groups) == 1:
+                break
+
+    def make_eulerian_circuit(self):
         pass
+
+    def make_hamiltonian_circuit(self):
+        pass
+
+
+class ConnectedGroups:
+    def __init__(self, ids):
+        self.groups = [[num] for num in ids]
+
+    def __getitem__(self, item):
+        return self.groups[item]
+
+    def merge_elements_groups(self, e1, e2):
+        self.merge_groups(self.get_element_group_nb(e1),
+                          self.get_element_group_nb(e2))
+
+    def merge_groups(self, g1, g2):
+        self.groups[g1] += self.groups[g2]
+        del(self.groups[g2])
+
+    def elements_in_same_group(self, e1, e2):
+        return self.get_element_group_nb(e1) == self.get_element_group_nb(e2)
+
+    def get_element_group(self, element):
+        return self[self.get_element_group_nb(element)]
+
+    def get_element_group_nb(self, element):
+        if self.element_is_in_group(element):
+            return [element in group for group in self.groups].index(True)
+        return -1
+
+    def element_is_in_group(self, element):
+        return any(element in group for group in self.groups)
+
+    def __len__(self):
+        return len(self.groups)
+
+    def __repr__(self):
+        return str(self.groups)
+
+
+class Edge:
+    def __init__(self, vertex1, vertex2, length):
+        self.vertex1 = vertex1
+        self.vertex2 = vertex2
+        self.length = length
+
+    def __lt__(self, other):
+        """Check whether another path is smaller than this one.
+
+        :param other: Path
+        :return: bool
+        """
+        return self.length < other.length
+
+    def __repr__(self):
+        return "{} - {}: {}".format(self.vertex1, self.vertex2, self.length)
