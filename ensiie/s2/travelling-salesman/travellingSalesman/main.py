@@ -1,6 +1,5 @@
 import argparse
 import time
-import os
 
 from travellingSalesman.inputOutput import Reader, Writer
 from travellingSalesman.point import Point

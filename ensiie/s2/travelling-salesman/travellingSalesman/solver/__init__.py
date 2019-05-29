@@ -1,0 +1,2 @@
+from travellingSalesman.solver.optimal import OptimalSolver
+from travellingSalesman.solver.christofides import ChristofidesSolver
