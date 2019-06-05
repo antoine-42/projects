@@ -90,20 +90,39 @@ class ChristofidesSolver(Solver):
                 break
         return min_weight_matching
 
-    def make_eulerian_circuit(self, eulerian_graph):
+    def make_eulerian_circuit(self, eulerian_graph, start_id=0):
         """
 
         """
         eulerian_circuit = []
-        while True:
-            break
-        return eulerian_circuit
+
+        curr_id = start_id
+
+        neighbors = {vertex_id: [edge, edge.vertex_in_edge(curr_id)]
+                     for edge in eulerian_graph
+                     if edge.vertex_in_edge(curr_id) is not None
+                     for vertex_id in range(self.graph_size)}
+
+        while len(eulerian_graph) > 0:
+            curr_neighbors = neighbors[curr_id]
+            if len(curr_neighbors) == 0:
+                sub_circuit, eulerian_graph = self.make_eulerian_circuit(eulerian_graph, xx)
+            else:
+                eulerian_circuit.append(curr_id)
+                eulerian_graph.remove(curr_neighbors[0][0])
+                neighbors[curr_id].remove(curr_neighbors[0][1])
+                curr_id = curr_neighbors[0][1]
+        eulerian_circuit.append(curr_id)
+        return eulerian_circuit, eulerian_graph
 
     def make_hamiltonian_circuit(self, eulerian_circuit):
         pass
 
 
 class ConnectedGroups:
+    """Class for representing the connected groups. It stores and helps make operations on a list of groups.
+
+    """
     def __init__(self, ids):
         self.groups = [[num] for num in ids]
 
@@ -140,13 +159,22 @@ class ConnectedGroups:
 
 
 class Edge:
+    """Class for representing edges.
+
+    """
     def __init__(self, vertex1, vertex2, length):
         self.vertex1 = vertex1
         self.vertex2 = vertex2
         self.length = length
 
+    def vertex_in_edge(self, vertex):
+        if vertex == self.vertex1:
+            return self.vertex2
+        if vertex == self.vertex2:
+            return self.vertex1
+
     def __lt__(self, other):
-        """Check whether another path is smaller than this one.
+        """Check whether another edge is smaller than this one.
 
         :param other: Path
         :return: bool
