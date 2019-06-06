@@ -55,6 +55,9 @@ class Reader:
         """
         points = []
         for n, row in enumerate(csv_reader):
+            row = row[:2]
+            if len(row) < 2:
+                raise ValueError("Error at line {}: not enough values".format(n))
             x, y = [float(i) for i in row]
             points.append(Point(n, x, y))
         return points
