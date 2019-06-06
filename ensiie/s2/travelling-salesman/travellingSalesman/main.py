@@ -3,7 +3,7 @@ import argparse
 import time
 
 from travellingSalesman.inputOutput import Reader, Writer
-from travellingSalesman.point import Point
+from travellingSalesman.vertex import Vertex
 from travellingSalesman.pvcPlot import plot
 import travellingSalesman.solver
 

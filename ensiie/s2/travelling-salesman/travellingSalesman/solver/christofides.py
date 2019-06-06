@@ -98,9 +98,7 @@ class ChristofidesSolver(Solver):
 
         """
         eulerian_circuit = []
-
         curr_id = start_id
-
         sub_path = False
         if neighbors is None:
             neighbors = {vertex_id: [[edge, edge.vertex_in_edge(vertex_id)]
@@ -121,9 +119,8 @@ class ChristofidesSolver(Solver):
                 eulerian_circuit[insert_index:0] = sub_circuit
             else:
                 curr_neighbor = curr_neighbors[0]
-                curr_edge = curr_neighbor[0]
                 eulerian_circuit.append(curr_id)
-                eulerian_graph.remove(curr_edge)
+                eulerian_graph.remove(curr_neighbor[0])
                 neighbors[curr_id].remove(curr_neighbor)
                 curr_id = curr_neighbor[1]
                 neighbors[curr_id] = [neighbor for neighbor in neighbors[curr_id] if neighbor[0] != curr_neighbor[0]]
@@ -142,8 +139,40 @@ class ChristofidesSolver(Solver):
                 for i, vertex in enumerate(eulerian_circuit)
                 if vertex not in eulerian_circuit[:i]]
 
-    def remove_crossings(self, circuit):
-        pass
+    def remove_intersections(self, circuit):
+        circuit
+        for vertex_id in range(len(circuit[:-1])):
+            curr_vertex = self.vertices[circuit[vertex_id]]
+            next_vertex = self.vertices[circuit[vertex_id + 1]]
+            for other_vertex_id in range(len(circuit[:-1])):
+                other_curr_vertex = self.vertices[circuit[other_vertex_id]]
+                other_next_vertex = self.vertices[circuit[other_vertex_id + 1]]
+
+                intersection = ChristofidesSolver.intersect(curr_vertex, next_vertex, other_curr_vertex, other_next_vertex)
+                if intersection:
+                    circuit = self.remove_intersection(circuit, vertex_id + 1, other_vertex_id + 2)
+        return circuit
+
+    def remove_intersection(self, circuit, first_line_end, second_line_start):
+        circuit[first_line_end:second_line_start] = circuit[first_line_end:second_line_start][::-1]
+        return circuit
+
+    @staticmethod
+    def counterclockwise(a, b, c):
+        """Checks whether 3 points are in counterclockwise order.
+        """
+        return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x)
+
+    @staticmethod
+    def intersect(a, b, c, d):
+        """Checks whether the segments AB and CD intersect
+
+        Checks whether all elements are in the same order, clockwise or counterclockwise.
+        If they are not, they intersect.
+        """
+        return (ChristofidesSolver.counterclockwise(a, c, d) != ChristofidesSolver.counterclockwise(b, c, d)
+                and ChristofidesSolver.counterclockwise(a, b, c) != ChristofidesSolver.counterclockwise(a, b, d))
+
 
     def calculate_distance(self, circuit):
         length = 0
