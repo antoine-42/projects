@@ -4,23 +4,6 @@ from travellingSalesman.solver.solver import Solver, Path
 class ChristofidesSolver(Solver):
     """Implementation of the Christofides algorithm.
 
-    test5.csv:
-        solution:1-3-4-5-2-1
-        distance:4.414213562373095
-        temps:0.003407716751098633 secondes
-    test10.csv
-        solution:1-2-4-5-6-9-10-3-8-7-1
-        distance:99.13860358020509
-        temps:0.008467912673950195 secondes
-    berlin52:
-        solution:1-22-31-18-3-17-21-42-7-2-30-23-20-50-29-16-44-34-35-36-49-39-40-37-38-24-48-46-47-26-27-13-14-52-28-12-51-11-25-4-6-5-15-43-33-9-10-8-41-19-45-32-1
-        distance:8611.41625744787
-        temps:0.05182600021362305 secondes
-    qatar194:
-        solution:1-25-23-13-14-17-26-24-21-18-33-28-29-22-45-57-64-60-69-74-78-75-72-76-71-80-87-82-62-59-36-63-65-20-85-86-98-90-89-94-99-101-104-111-130-127-125-126-132-134-137-140-145-156-149-146-142-70-77-79-81-84-83-88-92-95-124-123-128-120-121-117-129-135-133-131-136-143-148-155-151-160-166-171-170-167-180-185-178-181-177-184-188-193-191-192-189-190-194-187-186-183-168-165-175-173-174-179-172-169-163-161-164-176-182-158-159-162-147-152-153-150-144-141-157-154-139-138-116-115-112-110-100-108-107-105-106-97-96-93-91-103-102-109-113-114-119-122-118-6-8-16-11-7-4-2-3-5-9-10-12-15-19-30-32-31-35-42-50-49-55-44-46-41-38-43-40-34-39-47-51-37-27-48-52-54-53-56-58-61-67-73-66-68-1
-        distance:12916.300114461586
-        temps:1.0740315914154053 secondes
-
     """
     def __init__(self, points):
         super().__init__(points)
@@ -34,8 +17,9 @@ class ChristofidesSolver(Solver):
         eulerian_graph = min_spanning_tree + min_weight_matching
         eulerian_circuit = self.make_eulerian_circuit(eulerian_graph)[0]
         hamiltonian_circuit = self.make_hamiltonian_circuit(eulerian_circuit)
-        hamiltonian_circuit_points = [self.vertices[i] for i in hamiltonian_circuit]
-        return Path(hamiltonian_circuit_points)
+        hamiltonian_circuit_vertices = [self.vertices[i] for i in hamiltonian_circuit]
+        circuit_length = self.calculate_distance(hamiltonian_circuit)
+        return Path(hamiltonian_circuit_vertices, circuit_length)
 
     def make_distance_matrix(self):
         """Make a distance matrix with the points.
@@ -131,28 +115,44 @@ class ChristofidesSolver(Solver):
             if len(curr_neighbors) == 0:
                 if sub_path:
                     break
-                circuit_neighbors = [vertex_id
-                                     for vertex_id, curr_neighbors in neighbors.items()
-                                     if len(curr_neighbors) > 0 and vertex_id in eulerian_circuit]
-                new_start = circuit_neighbors[0]
+                new_start, curr_edge = self.get_vertex_with_neighbor(neighbors, eulerian_circuit, curr_id)
                 sub_circuit, eulerian_graph = self.make_eulerian_circuit(eulerian_graph, new_start, neighbors)
-                insert_index = eulerian_circuit.index(new_start)
-                del(eulerian_circuit[insert_index])
+                insert_index = eulerian_circuit.index(curr_edge)
                 eulerian_circuit[insert_index:0] = sub_circuit
             else:
                 curr_neighbor = curr_neighbors[0]
-                eulerian_circuit.append(curr_id)
-                eulerian_graph.remove(curr_neighbor[0])
+                curr_edge = curr_neighbor[0]
+                eulerian_circuit.append(curr_edge)
+                eulerian_graph.remove(curr_edge)
                 neighbors[curr_id].remove(curr_neighbor)
                 curr_id = curr_neighbor[1]
                 neighbors[curr_id] = [neighbor for neighbor in neighbors[curr_id] if neighbor[0] != curr_neighbor[0]]
-        eulerian_circuit.append(curr_id)
         return eulerian_circuit, eulerian_graph
+
+    def get_vertex_with_neighbor(self, neighbors, eulerian_circuit, curr_id):
+        eulerian_circuit_vertices = [edge.vertex1 for edge in eulerian_circuit] + [eulerian_circuit[-1].vertex2]
+        for vertex_id, curr_neighbors in neighbors.items():
+            if len(curr_neighbors) > 0 and vertex_id in eulerian_circuit_vertices:
+                return vertex_id, curr_neighbors[0][0]
 
     def make_hamiltonian_circuit(self, eulerian_circuit):
         return [vertex
                 for i, vertex in enumerate(eulerian_circuit)
                 if vertex not in eulerian_circuit[:i]]
+
+    def remove_crossings(self, circuit):
+        pass
+
+    def calculate_distance(self, circuit):
+        length = 0
+        circuit += [circuit[0]]
+        for i in range(len(circuit) - 1):
+            id_1 = circuit[i]
+            id_2 = circuit[i + 1]
+            if id_1 > id_2:
+                id_1, id_2 = id_2, id_1
+            length += self.distance_matrix[id_1][id_2]
+        return length
 
 
 class ConnectedGroups:

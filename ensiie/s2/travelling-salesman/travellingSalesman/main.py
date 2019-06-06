@@ -1,3 +1,4 @@
+import os
 import argparse
 import time
 
@@ -11,22 +12,36 @@ class Main:
     def __init__(self):
         """Main.
         """
-        start_time = time.time()
-        self.input_file = None
+        self.input_path = None
         self.output_file = None
+        start_time = time.time()
         self.read_args()
 
-        reader = Reader(self.input_file)
-        self.points = reader.read_file()
+        if os.path.isdir(self.input_path):
+            files = [os.path.join(self.input_path, file)
+                     for file in os.listdir(self.input_path)
+                     if file.endswith('.csv')]
+            processed = 0
+            for file in files:
+                if os.path.isfile(file):
+                    processed += 1
+                    print(file.split("/")[-1])
+                    self.process_file(file)
+            print("Total time for {} files: {} seconds".format(processed, time.time() - start_time))
+        else:
+            self.process_file(self.input_path)
 
-        Point.distances = [[None] * len(self.points) for i in range(len(self.points))]
+    def process_file(self, file):
+        start_time = time.time()
+        reader = Reader(file)
+        points = reader.read_file()
 
-        solver = travellingSalesman.solver.ChristofidesSolver(self.points)
-        self.solution = solver.solve()
+        solver = travellingSalesman.solver.ChristofidesSolver(points)
+        solution = solver.solve()
 
-        Writer(self.output_file, self.solution, start_time)
-        solution_text = "{}-1".format("-".join([str(s + 1) for s in self.solution.get_order()]))
-        plot(self.input_file, solution_text)
+        Writer(self.output_file, solution, start_time)
+        solution_text = "{}-1".format("-".join([str(s + 1) for s in solution.get_order()]))
+        plot(file, solution_text)
 
     def read_args(self):
         """Read the arguments.
@@ -38,7 +53,7 @@ class Main:
                             help="Output file. If not set, program will output to stdout.")
 
         args = parser.parse_args()
-        self.input_file = args.input_file
+        self.input_path = args.input_file
         self.output_file = args.output_file
 
 
