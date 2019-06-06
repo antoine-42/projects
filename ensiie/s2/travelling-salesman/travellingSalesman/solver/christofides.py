@@ -115,27 +115,29 @@ class ChristofidesSolver(Solver):
             if len(curr_neighbors) == 0:
                 if sub_path:
                     break
-                new_start, curr_edge = self.get_vertex_with_neighbor(neighbors, eulerian_circuit, curr_id)
+                new_start = self.get_vertex_with_neighbor(neighbors, eulerian_circuit)
                 sub_circuit, eulerian_graph = self.make_eulerian_circuit(eulerian_graph, new_start, neighbors)
-                insert_index = eulerian_circuit.index(curr_edge)
+                insert_index = eulerian_circuit.index(new_start)
                 eulerian_circuit[insert_index:0] = sub_circuit
             else:
                 curr_neighbor = curr_neighbors[0]
                 curr_edge = curr_neighbor[0]
-                eulerian_circuit.append(curr_edge)
+                eulerian_circuit.append(curr_id)
                 eulerian_graph.remove(curr_edge)
                 neighbors[curr_id].remove(curr_neighbor)
                 curr_id = curr_neighbor[1]
                 neighbors[curr_id] = [neighbor for neighbor in neighbors[curr_id] if neighbor[0] != curr_neighbor[0]]
+        eulerian_circuit.append(curr_id)
         return eulerian_circuit, eulerian_graph
 
-    def get_vertex_with_neighbor(self, neighbors, eulerian_circuit, curr_id):
-        eulerian_circuit_vertices = [edge.vertex1 for edge in eulerian_circuit] + [eulerian_circuit[-1].vertex2]
+    @staticmethod
+    def get_vertex_with_neighbor(neighbors, eulerian_circuit):
         for vertex_id, curr_neighbors in neighbors.items():
-            if len(curr_neighbors) > 0 and vertex_id in eulerian_circuit_vertices:
-                return vertex_id, curr_neighbors[0][0]
+            if len(curr_neighbors) > 0 and vertex_id in eulerian_circuit:
+                return vertex_id
 
-    def make_hamiltonian_circuit(self, eulerian_circuit):
+    @staticmethod
+    def make_hamiltonian_circuit(eulerian_circuit):
         return [vertex
                 for i, vertex in enumerate(eulerian_circuit)
                 if vertex not in eulerian_circuit[:i]]
