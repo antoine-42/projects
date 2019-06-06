@@ -94,7 +94,14 @@ class ChristofidesSolver(Solver):
         return min_weight_matching
 
     def make_eulerian_circuit(self, eulerian_graph, start_id=0, neighbors=None):
-        """
+        """Make an eulerian circuit, a circuit that goes through every vertices of the graph.
+
+        Make a path by going to an arbitrary neighbor.
+        When this is not possible anymore:
+            While there are still unvisited nodes:
+                Go back to a vertex in the path that still has an unvisited neighbor.
+                Make a path by going to an arbitrary neighbor until not possible.
+                Insert this path at the position of the starting vertex.
 
         """
         eulerian_circuit = []
@@ -108,39 +115,59 @@ class ChristofidesSolver(Solver):
         else:
             sub_path = True
 
-        while len(eulerian_graph) > 0:
+        curr_neighbors = neighbors[curr_id]
+        while len(curr_neighbors) != 0:
+            curr_neighbor = curr_neighbors[0]
+            eulerian_circuit.append(curr_id)
+            eulerian_graph.remove(curr_neighbor[0])
+            neighbors[curr_id].remove(curr_neighbor)
+            curr_id = curr_neighbor[1]
+            neighbors[curr_id] = [neighbor for neighbor in neighbors[curr_id] if neighbor[0] != curr_neighbor[0]]
             curr_neighbors = neighbors[curr_id]
-            if len(curr_neighbors) == 0:
-                if sub_path:
-                    break
-                new_start = self.get_vertex_with_neighbor(neighbors, eulerian_circuit)
-                sub_circuit, eulerian_graph = self.make_eulerian_circuit(eulerian_graph, new_start, neighbors)
-                insert_index = eulerian_circuit.index(new_start)
-                eulerian_circuit[insert_index:0] = sub_circuit
-            else:
-                curr_neighbor = curr_neighbors[0]
-                eulerian_circuit.append(curr_id)
-                eulerian_graph.remove(curr_neighbor[0])
-                neighbors[curr_id].remove(curr_neighbor)
-                curr_id = curr_neighbor[1]
-                neighbors[curr_id] = [neighbor for neighbor in neighbors[curr_id] if neighbor[0] != curr_neighbor[0]]
+
+        while len(eulerian_graph) > 0:
+            if sub_path:
+                break
+            new_start = self.get_vertex_with_neighbor(neighbors, eulerian_circuit)
+            sub_circuit, eulerian_graph = self.make_eulerian_circuit(eulerian_graph, new_start, neighbors)
+            insert_index = eulerian_circuit.index(new_start)
+            eulerian_circuit[insert_index:0] = sub_circuit
         eulerian_circuit.append(curr_id)
         return eulerian_circuit, eulerian_graph
 
     @staticmethod
     def get_vertex_with_neighbor(neighbors, eulerian_circuit):
+        """Returns a vertex within the eulerian circuit with at least one neighbor.
+
+        :param neighbors:
+        :param eulerian_circuit:
+        :return:
+        """
         for vertex_id, curr_neighbors in neighbors.items():
             if len(curr_neighbors) > 0 and vertex_id in eulerian_circuit:
                 return vertex_id
 
     @staticmethod
     def make_hamiltonian_circuit(eulerian_circuit):
+        """Remove the duplicate vertices in a circuit.
+
+        For A > B > C > B > A, returns A > B > C > A
+
+        :param eulerian_circuit:
+        :return:
+        """
         return [vertex
                 for i, vertex in enumerate(eulerian_circuit)
                 if vertex not in eulerian_circuit[:i]]
 
     def remove_intersections(self, circuit):
-        circuit
+        """Remove intersections from a circuit.
+
+        Unfortunately doesn't works because it tends to give a worse result than the initial crossing in most cases.
+
+        :param circuit:
+        :return:
+        """
         for vertex_id in range(len(circuit[:-1])):
             curr_vertex = self.vertices[circuit[vertex_id]]
             next_vertex = self.vertices[circuit[vertex_id + 1]]
@@ -154,6 +181,15 @@ class ChristofidesSolver(Solver):
         return circuit
 
     def remove_intersection(self, circuit, first_line_end, second_line_start):
+        """Remove the intersection between 2 lines.
+
+        It is done by inverting the order of the points after the start and before the end of the intersection.
+
+        :param circuit:
+        :param first_line_end:
+        :param second_line_start:
+        :return:
+        """
         circuit[first_line_end:second_line_start] = circuit[first_line_end:second_line_start][::-1]
         return circuit
 
