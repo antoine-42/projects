@@ -39,7 +39,7 @@ class Main:
             reader = Reader(file)
             points = reader.read_file()
 
-            solver = travellingSalesman.solver.ChristofidesSolver(points, True)
+            solver = travellingSalesman.solver.ChristofidesSolver(points, False)
             solution = solver.solve()
         except Exception as e:
             print("Error while processing {}: {}\n".format(file, e))

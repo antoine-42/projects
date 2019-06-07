@@ -19,7 +19,7 @@ class ChristofidesSolver(Solver):
         eulerian_circuit = self.make_eulerian_circuit(eulerian_graph)[0]
         hamiltonian_circuit = self.make_hamiltonian_circuit(eulerian_circuit)
         if self.remove_crossings:
-            hamiltonian_circuit = self.remove_intersections(hamiltonian_circuit)
+            hamiltonian_circuit = self.remove_intersections(hamiltonian_circuit, True, 5)
         hamiltonian_circuit_vertices = [self.vertices[i] for i in hamiltonian_circuit]
         circuit_length = self.calculate_distance(hamiltonian_circuit)
         return Path(hamiltonian_circuit_vertices, circuit_length)
@@ -163,15 +163,17 @@ class ChristofidesSolver(Solver):
                 for i, vertex in enumerate(eulerian_circuit)
                 if vertex not in eulerian_circuit[:i]]
 
-    def remove_intersections(self, circuit):
+    def remove_intersections(self, circuit, recursive=False, max_iter=0):
         """Remove intersections from a circuit.
 
         Unfortunately doesn't works because it tends to give a worse result than the initial crossing in most cases.
 
+        :param recursive:
         :param circuit:
         :return:
         """
         circuit_processing = circuit + [circuit[0]]
+        intersection_removed = False
         for vertex_id in range(len(circuit_processing[:-1])):
             curr_vertex = self.vertices[circuit_processing[vertex_id]]
             next_vertex = self.vertices[circuit_processing[vertex_id + 1]]
@@ -180,7 +182,10 @@ class ChristofidesSolver(Solver):
                 other_next_vertex = self.vertices[circuit_processing[other_vertex_id + 1]]
                 intersection = ChristofidesSolver.intersect(curr_vertex, next_vertex, other_curr_vertex, other_next_vertex)
                 if intersection:
+                    intersection_removed = True
                     circuit_processing = self.remove_intersection(circuit_processing, vertex_id + 1, other_vertex_id + 1)
+        if recursive and intersection_removed and max_iter > 0:
+            return self.remove_intersections(circuit_processing[:-1], recursive, max_iter - 1)
         return circuit_processing[:-1]
 
     def remove_intersection(self, circuit, first_line_end, second_line_start):
