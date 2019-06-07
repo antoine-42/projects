@@ -5,8 +5,9 @@ class ChristofidesSolver(Solver):
     """Implementation of the Christofides algorithm.
 
     """
-    def __init__(self, points):
+    def __init__(self, points, remove_crossings=False):
         super().__init__(points)
+        self.remove_crossings = remove_crossings
         self.distance_matrix = [[0 for j in range(self.graph_size)] for i in range(self.graph_size)]
         self.make_distance_matrix()
 
@@ -17,6 +18,8 @@ class ChristofidesSolver(Solver):
         eulerian_graph = min_spanning_tree + min_weight_matching
         eulerian_circuit = self.make_eulerian_circuit(eulerian_graph)[0]
         hamiltonian_circuit = self.make_hamiltonian_circuit(eulerian_circuit)
+        if self.remove_crossings:
+            hamiltonian_circuit = self.remove_intersections(hamiltonian_circuit)
         hamiltonian_circuit_vertices = [self.vertices[i] for i in hamiltonian_circuit]
         circuit_length = self.calculate_distance(hamiltonian_circuit)
         return Path(hamiltonian_circuit_vertices, circuit_length)
@@ -168,17 +171,17 @@ class ChristofidesSolver(Solver):
         :param circuit:
         :return:
         """
-        for vertex_id in range(len(circuit[:-1])):
-            curr_vertex = self.vertices[circuit[vertex_id]]
-            next_vertex = self.vertices[circuit[vertex_id + 1]]
-            for other_vertex_id in range(len(circuit[:-1])):
-                other_curr_vertex = self.vertices[circuit[other_vertex_id]]
-                other_next_vertex = self.vertices[circuit[other_vertex_id + 1]]
-
+        circuit_processing = circuit + [circuit[0]]
+        for vertex_id in range(len(circuit_processing[:-1])):
+            curr_vertex = self.vertices[circuit_processing[vertex_id]]
+            next_vertex = self.vertices[circuit_processing[vertex_id + 1]]
+            for other_vertex_id in range(len(circuit_processing[:-1])):
+                other_curr_vertex = self.vertices[circuit_processing[other_vertex_id]]
+                other_next_vertex = self.vertices[circuit_processing[other_vertex_id + 1]]
                 intersection = ChristofidesSolver.intersect(curr_vertex, next_vertex, other_curr_vertex, other_next_vertex)
                 if intersection:
-                    circuit = self.remove_intersection(circuit, vertex_id + 1, other_vertex_id + 2)
-        return circuit
+                    circuit_processing = self.remove_intersection(circuit_processing, vertex_id + 1, other_vertex_id + 1)
+        return circuit_processing[:-1]
 
     def remove_intersection(self, circuit, first_line_end, second_line_start):
         """Remove the intersection between 2 lines.
@@ -206,6 +209,8 @@ class ChristofidesSolver(Solver):
         Checks whether all elements are in the same order, clockwise or counterclockwise.
         If they are not, they intersect.
         """
+        if a == c or a == d or b == c or b == d:
+            return False
         return (ChristofidesSolver.counterclockwise(a, c, d) != ChristofidesSolver.counterclockwise(b, c, d)
                 and ChristofidesSolver.counterclockwise(a, b, c) != ChristofidesSolver.counterclockwise(a, b, d))
 

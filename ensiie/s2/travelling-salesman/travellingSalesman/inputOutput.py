@@ -38,13 +38,13 @@ class Reader:
                 try:
                     points = self.read_rows(csv_reader)
                 except ValueError as e:
-                    sys.exit('Error reading file {}, line {}: {}'.format(self.file, csv_reader.line_num, e))
+                    raise ValueError('Error reading file {}, line {}: {}'.format(self.file, csv_reader.line_num, e))
                 except csv.Error as e:
-                    sys.exit('Error reading file {}, line {}: {}'.format(self.file, csv_reader.line_num, e))
+                    raise ValueError('Error reading file {}, line {}: {}'.format(self.file, csv_reader.line_num, e))
         except IOError as e:
-            sys.exit('Error reading file {}: {}'.format(self.file, e))
+            raise ValueError('Error reading file {}: {}'.format(self.file, e))
         if len(points) < 1:
-            sys.exit('Error reading file {}: no point found in file'.format(self.file))
+            raise ValueError('Error reading file {}: no point found in file'.format(self.file))
         return points
 
     def read_rows(self, csv_reader):
