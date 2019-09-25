@@ -1,0 +1,6 @@
+[submodule "ensiie/ensiie/s2/java-gestionnaire-inventaire"]
+	path = ensiie/ensiie/s2/java-gestionnaire-inventaire
+	url = git@github.com:antoine-42/gestionnaire-inventaire.git
+[submodule "ensiie/s2/java-gestionnaire-inventaire"]
+	path = ensiie/s2/java-gestionnaire-inventaire
+	url = git@github.com:antoine-42/gestionnaire-inventaire.git
