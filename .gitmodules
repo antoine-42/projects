@@ -19,3 +19,6 @@
 [submodule "iut/s4_24h-iut-2018"]
 	path = iut/s4_24h-iut-2018
 	url = git@github.com:antoine-42/24h-iut-2018.git
+[submodule "epita/s2_unity"]
+	path = epita/s2_unity
+	url = git@github.com:antoine-42/PROJECT_Hayasa.git
