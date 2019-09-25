@@ -13,3 +13,9 @@
 [submodule "iut/s3_java-ihm"]
 	path = iut/s3_java-ihm
 	url = git@github.com:antoine-42/projet-ihm.git
+[submodule "iut/s4_last-year-project"]
+	path = iut/s4_last-year-project
+	url = git@github.com:antoine-42/admineasy.git
+[submodule "iut/s4_24h-iut-2018"]
+	path = iut/s4_24h-iut-2018
+	url = git@github.com:antoine-42/24h-iut-2018.git
