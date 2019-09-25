@@ -7,3 +7,9 @@
 [submodule "ensiie/s3/webservices"]
 	path = ensiie/s3/webservices
 	url = git@github.com:antoine-42/s3-webservice.git
+[submodule "lycee/projet-isn"]
+	path = lycee/projet-isn
+	url = git@github.com:antoine-42/jeu.git
+[submodule "iut/s3_java-ihm"]
+	path = iut/s3_java-ihm
+	url = git@github.com:antoine-42/projet-ihm.git

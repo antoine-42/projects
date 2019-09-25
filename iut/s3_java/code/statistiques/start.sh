@@ -1,1 +1,0 @@
-java -cp "../mariadb-java-client-2.1.2.jar:." Main
