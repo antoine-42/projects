@@ -22,6 +22,12 @@
 [submodule "epita/s2_unity"]
 	path = epita/s2_unity
 	url = git@github.com:antoine-42/PROJECT_Hayasa.git
-[submodule "ensiie/s3/continuous-integration"]
-	path = ensiie/s3/continuous-integration-tp/continuous-integration
+[submodule "ensiie/s3/continuous-integration-tp"]
+	path = ensiie/s3/continuous-integration-tp
 	url = git@github.com:antoine-42/s3-continuous-integration.git
+[submodule "ensiie/s3/continuous-integration-project/back"]
+	path = ensiie/s3/continuous-integration-project/back
+	url = git@github.com:Erlum/CI_Project_Back.git
+[submodule "ensiie/s3/continuous-integration-project/front"]
+	path = ensiie/s3/continuous-integration-project/front
+	url = git@github.com:Erlum/CI_Project_Front.git
