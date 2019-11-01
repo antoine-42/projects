@@ -31,3 +31,6 @@
 [submodule "ensiie/s3/continuous-integration-project/front"]
 	path = ensiie/s3/continuous-integration-project/front
 	url = git@github.com:Erlum/CI_Project_Front.git
+[submodule "ensiie/s3/continuous-integration-project/back"]
+	path = ensiie/s3/continuous-integration-project/back
+	url = git@github.com:Erlum/CI_Project_Back.git
