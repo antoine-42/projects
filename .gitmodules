@@ -25,12 +25,6 @@
 [submodule "ensiie/s3/continuous-integration-tp"]
 	path = ensiie/s3/continuous-integration-tp
 	url = git@github.com:antoine-42/s3-continuous-integration.git
-[submodule "ensiie/s3/continuous-integration-project/back"]
-	path = ensiie/s3/continuous-integration-project/back
-	url = git@github.com:Erlum/CI_Project_Back.git
-[submodule "ensiie/s3/continuous-integration-project/front"]
-	path = ensiie/s3/continuous-integration-project/front
-	url = git@github.com:Erlum/CI_Project_Front.git
 [submodule "ensiie/s3/machine-learning-youtube"]
 	path = ensiie/s3/machine-learning-youtube
 	url = git@github.com:antoine-42/machine-learning-youtube.git
