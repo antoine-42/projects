@@ -34,3 +34,6 @@
 [submodule "ensiie/s3/continuous-integration-project/back"]
 	path = ensiie/s3/continuous-integration-project/back
 	url = git@github.com:Erlum/CI_Project_Back.git
+[submodule "ilus"]
+	path = ilus
+	url = git@github.com:antoine-42/ilus.git
