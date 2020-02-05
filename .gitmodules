@@ -37,3 +37,6 @@
 [submodule "ilus"]
 	path = ilus
 	url = git@github.com:antoine-42/ilus.git
+[submodule "ensiie/s4/web-object-oriented"]
+	path = ensiie/s4/web-object-oriented
+	url = git@github.com:rparpa/ensiie-project.git
