@@ -1,3 +1,4 @@
+import copy
 import enum
 import random
 
@@ -119,7 +120,7 @@ class Game:
         :return: Game
         """
         new_game = Game(self.width, self.height)
-        new_game.board = self.board
+        new_game.board = copy.deepcopy(self.board)
         return new_game
 
     def h1(self) -> int:
@@ -195,3 +196,9 @@ class Game:
 
     def __gt__(self, o: object) -> bool:
         return type(o) == Game and self.compute_heuristic() > o.compute_heuristic()
+
+    def __repr__(self):
+        return str(self.board)
+
+    def __hash__(self):
+        return hash(str(self.board))

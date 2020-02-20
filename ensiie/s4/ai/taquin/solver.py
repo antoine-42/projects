@@ -94,10 +94,13 @@ class Solver:
         """
         game = self.game.copy()
         game.heuristic = heuristic
-        queue = heapq.heappush(game)
+        queue = []
+        heapq.heappush(queue, game)
+        old_parents = set()
         traversed_nodes = 0
         while len(queue) > 0:
             curr_parent = heapq.heappop(queue)
+            old_parents.add(curr_parent)
             for x in range(curr_parent.width):
                 for y in range(curr_parent.height):
                     # Don't iterate over all moves, otherwise we'll get a lot of duplicate states.
@@ -111,6 +114,6 @@ class Solver:
                         traversed_nodes += 1
                         if curr_child.finished():
                             return True, traversed_nodes, curr_child.cost
-                        heapq.heappush(queue, curr_child)
+                        if curr_child not in queue and curr_child not in old_parents:
+                            heapq.heappush(queue, curr_child)
         return False, traversed_nodes
-
