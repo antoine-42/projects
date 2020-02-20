@@ -6,7 +6,7 @@ def test_game():
     curr_game = game.Game()
     curr_game.fill()
     curr_game.display()
-    curr_game.move(1, 1, game.Move.UP)
+    curr_game.move(1, 1, game.Direction.UP)
     curr_game.display()
     print(curr_game.h1())
     print(curr_game.h2())

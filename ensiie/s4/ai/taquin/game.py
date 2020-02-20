@@ -4,7 +4,7 @@ import random
 
 
 def index_2d(l: list, e):
-    """Get the index of an element in a 2d list.
+    """Get the position of an element in a 2d list.
 
     :param l: list.
     :param e: element.
@@ -16,7 +16,7 @@ def index_2d(l: list, e):
     raise ValueError("{} is not in list".format(e))
 
 
-class Move(enum.Enum):
+class Direction(enum.Enum):
     UP = 0
     RIGHT = 1
     DOWN = 2
@@ -37,11 +37,17 @@ class Game:
         [7, 6, 5]
     ]
 
-    def __init__(self, width: int = 3, height: int = 3, cost: int = 0, heuristic: Heuristic = Heuristic.H3):
-        """
+    def __init__(self,
+                 width: int = 3,
+                 height: int = 3,
+                 cost: int = 0,
+                 heuristic: Heuristic = Heuristic.H3):
+        """Game constructor.
 
-        :param width:
-        :param height:
+        :param width: Not meant to be changed from default.
+        :param height: Not meant to be changed from default.
+        :param cost: Cost to reach this state.
+        :param heuristic: Heuristic used to compute the value of this board.
         """
         self.width = width
         self.height = height
@@ -51,9 +57,7 @@ class Game:
         self.heuristic = heuristic
 
     def fill(self):
-        """Randomly fill the board
-
-        :return:
+        """Randomly fill the board.
         """
         remaining_choices = list(range(1, self.tile_number + 1)) + [None]
         for x in range(self.width):
@@ -63,9 +67,7 @@ class Game:
                 self.board[x][y] = curr_choice
 
     def display(self):
-        """
-
-        :return:
+        """Display the board
         """
         display = ""
         for line in self.board:
@@ -76,46 +78,49 @@ class Game:
             display += "\n"
         print(display)
 
-    def move(self, x: int, y: int, move: Move):
-        """
+    def move(self,
+             x: int,
+             y: int,
+             direction: Direction):
+        """Move a tile in a direction.
 
         :param x:
         :param y:
-        :param move:
+        :param direction:
         :return:
         """
-        if move == Move.RIGHT:
+        if direction == Direction.RIGHT:
             if y == self.height - 1:
                 raise ValueError("Can't move this cell right")
             else:
                 self.board[x][y], self.board[x][y + 1] = self.board[x][y + 1], self.board[x][y]
-        elif move == Move.UP:
+        elif direction == Direction.UP:
             if x == 0:
                 raise ValueError("Can't move this cell up")
             else:
                 self.board[x][y], self.board[x - 1][y] = self.board[x - 1][y], self.board[x][y]
-        elif move == Move.LEFT:
+        elif direction == Direction.LEFT:
             if y == 0:
                 raise ValueError("Can't move this cell left")
             else:
                 self.board[x][y], self.board[x][y - 1] = self.board[x][y - 1], self.board[x][y]
-        elif move == Move.DOWN:
+        elif direction == Direction.DOWN:
             if x == self.width - 1:
                 raise ValueError("Can't move this cell down")
             else:
                 self.board[x][y], self.board[x + 1][y] = self.board[x + 1][y], self.board[x][y]
 
     def finished(self) -> bool:
-        """Check whether the game is finished
+        """Check whether the game is finished.
 
-        :return: True if the game is finished, false otherwise
+        :return: True if the game is finished, false otherwise.
         """
         if self.board == Game.FINISHED_BOARD:
             return True
         return False
 
     def copy(self):
-        """Return a copy of this object
+        """Return a copy of this object.
 
         :return: Game
         """
