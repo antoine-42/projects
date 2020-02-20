@@ -41,7 +41,7 @@ class Solver:
                         # Don't go back to a previous state, that would be a loop.
                         if curr_child not in past_states and curr_child not in queue:
                             queue.append(curr_child)
-        return False, processed_nodes_total
+        return False, processed_nodes_total, -1
 
     def depth_first_search(
             self,
@@ -143,4 +143,4 @@ class Solver:
                         # Don't go back to a previous state, that would be a loop.
                         if child not in queue and child not in past_states:
                             heapq.heappush(queue, child)
-        return False, new_processed_nodes
+        return False, new_processed_nodes, -1

@@ -14,15 +14,20 @@ def test_game():
     print(curr_game.h3())
 
 
+print_format_string = "Fini: {}, noeuds traités: {}, coups à jouer depuis l’état initial: {}"
+
+
 def solve():
     s = solver.Solver()
     s.game.display()
-    # print(s.breadth_first_search())
-    print(s.depth_first_search(max_depth=15))
-    # print(s.a_star(game.Heuristic.H1))
-    # print(s.a_star(game.Heuristic.H2))
-    # print(s.a_star(game.Heuristic.H3s))
-    # print(s.a_star(game.Heuristic.H3))
+    print(print_format_string.format(*s.breadth_first_search()))
+    print("Fini: {0}, noeuds traités: {1}, coups à jouer depuis l’état initial: {3}".format(
+        *s.depth_first_search(max_depth=15)))
+    print(print_format_string.format(*s.iterative_deepening_search()))
+    print(print_format_string.format(*s.a_star(game.Heuristic.H1)))
+    print(print_format_string.format(*s.a_star(game.Heuristic.H2)))
+    print(print_format_string.format(*s.a_star(game.Heuristic.H3s)))
+    print(print_format_string.format(*s.a_star(game.Heuristic.H3)))
 
 
 if __name__ == "__main__":
