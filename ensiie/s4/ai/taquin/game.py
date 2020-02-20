@@ -121,6 +121,8 @@ class Game:
         """
         new_game = Game(self.width, self.height)
         new_game.board = copy.deepcopy(self.board)
+        new_game.cost = self.cost
+        new_game.heuristic = self.heuristic
         return new_game
 
     def h1(self) -> int:
