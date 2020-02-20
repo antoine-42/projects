@@ -22,6 +22,13 @@ class Move(enum.Enum):
     LEFT = 3
 
 
+class Heuristic(enum.Enum):
+    H1 = 0
+    H2 = 1
+    H3s = 2
+    H3 = 3
+
+
 class Game:
     FINISHED_BOARD = [
         [1, 2, 3],
@@ -29,7 +36,7 @@ class Game:
         [7, 6, 5]
     ]
 
-    def __init__(self, width: int = 3, height: int = 3):
+    def __init__(self, width: int = 3, height: int = 3, cost: int = 0, heuristic: Heuristic = Heuristic.H3):
         """
 
         :param width:
@@ -39,6 +46,8 @@ class Game:
         self.height = height
         self.tile_number = self.width * self.height - 1
         self.board = [[None for i in range(self.width)] for i in range(self.height)]
+        self.cost = cost
+        self.heuristic = heuristic
 
     def fill(self):
         """Randomly fill the board
@@ -114,6 +123,10 @@ class Game:
         return new_game
 
     def h1(self) -> int:
+        """Compute the number of incorrectly placed tiles.
+
+        :return:
+        """
         misplaced_number = 0
         for x in range(self.width):
             for y in range(self.height):
@@ -122,6 +135,10 @@ class Game:
         return misplaced_number
 
     def h2(self) -> int:
+        """Compute the sum of the distances from the tiles to their correct position.
+
+        :return:
+        """
         total_distance = 0
         for x in range(self.width):
             for y in range(self.height):
@@ -130,6 +147,12 @@ class Game:
         return total_distance
 
     def h3s(self) -> int:
+        """Compute the score of the board:
+        If the center is not None: +1
+        If a border tile's successor is not tile+1: +2
+
+        :return:
+        """
         score = 0
         for x in range(self.width):
             for y in range(self.height):
@@ -139,11 +162,11 @@ class Game:
                 else:
                     successor = None
                     if x == 0 and y < 2:
-                        successor = self.board[x + 1][y]
-                    elif x < 2 and y == 2:
                         successor = self.board[x][y + 1]
+                    elif x < 2 and y == 2:
+                        successor = self.board[x + 1][y]
                     elif x == 2 and y > 0:
-                        successor = self.board[x - 1][y]
+                        successor = self.board[x][y - 1]
                     elif x > 0 and y == 0:
                         successor = self.board[x - 1][y]
                     if self.board[x][y] is None or successor is None or self.board[x][y] + 1 != successor:
@@ -151,4 +174,24 @@ class Game:
         return score
 
     def h3(self) -> int:
+        """h2 + 3*h3s
+
+        :return:
+        """
         return self.h2() + 3 * self.h3s()
+
+    def compute_heuristic(self) -> int:
+        if self.heuristic == Heuristic.H1:
+            return self.h1() + self.cost
+        if self.heuristic == Heuristic.H2:
+            return self.h2() + self.cost
+        if self.heuristic == Heuristic.H3s:
+            return self.h3s() + self.cost
+        if self.heuristic == Heuristic.H3:
+            return self.h3() + self.cost
+
+    def __eq__(self, o: object) -> bool:
+        return type(o) == Game and self.compute_heuristic() == o.compute_heuristic()
+
+    def __gt__(self, o: object) -> bool:
+        return type(o) == Game and self.compute_heuristic() > o.compute_heuristic()

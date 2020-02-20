@@ -1,14 +1,18 @@
-import taquin.game
-import taquin.solver
+import game
+import solver
 
 if __name__ == "__main__":
-    solver = taquin.solver.Solver()
+    solver = solver.Solver()
     # finish = solver.breadth_first_search()
     # finish = solver.depth_first_search(max_depth=4)
     # print(finish)
 
-    # game = taquin.game.Game()
-    # game.fill()
-    # game.display()
-    # game.move(1, 1, taquin.game.Move.UP)
-    # game.display()
+    curr_game = game.Game()
+    curr_game.fill()
+    curr_game.display()
+    curr_game.move(1, 1, game.Move.UP)
+    curr_game.display()
+    print(curr_game.h1())
+    print(curr_game.h2())
+    print(curr_game.h3s())
+    print(curr_game.h3())
