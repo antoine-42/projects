@@ -20,10 +20,10 @@ print_format_string = "Fini: {}, noeuds traités: {}, coups à jouer depuis l’
 def solve():
     s = solver.Solver()
     s.game.display()
-    print(print_format_string.format(*s.breadth_first_search()))
-    print("Fini: {0}, noeuds traités: {1}, coups à jouer depuis l’état initial: {3}".format(
-        *s.depth_first_search(max_depth=15)))
-    print(print_format_string.format(*s.iterative_deepening_search()))
+    # print(print_format_string.format(*s.breadth_first_search()))
+    # print("Fini: {0}, noeuds traités: {1}, coups à jouer depuis l’état initial: {3}".format(
+        # *s.depth_first_search(max_depth=15)))
+    # print(print_format_string.format(*s.iterative_deepening_search()))
     print(print_format_string.format(*s.a_star(game.Heuristic.H1)))
     print(print_format_string.format(*s.a_star(game.Heuristic.H2)))
     print(print_format_string.format(*s.a_star(game.Heuristic.H3s)))
@@ -31,5 +31,5 @@ def solve():
 
 
 if __name__ == "__main__":
-    test_game()
-    # solve()
+    # test_game()
+    solve()

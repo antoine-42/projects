@@ -109,20 +109,11 @@ class Solver:
         while len(queue) > 0:
             parent = heapq.heappop(queue)
             past_states.add(parent)
-            for x in range(parent.width):
-                for y in range(parent.height):
-                    # Don't iterate over all moves, otherwise we'll get a lot of duplicate states.
-                    for move in Direction.UP, Direction.RIGHT:
-                        child = parent.copy()
-                        try:
-                            child.move(x, y, move)
-                        except ValueError:
-                            continue
-                        child.cost += 1
-                        new_processed_nodes += 1
-                        if child.finished():
-                            return True, new_processed_nodes, child.cost
-                        # Don't go back to a previous state, that would be a loop.
-                        if child not in queue and child not in past_states:
-                            heapq.heappush(queue, child)
+            for child in game.generate_children():
+                new_processed_nodes += 1
+                if child.finished():
+                    return True, new_processed_nodes, child.cost
+                # Don't go back to a previous state, that would be a loop.
+                if child not in queue and child not in past_states:
+                    heapq.heappush(queue, child)
         return False, new_processed_nodes, -1
