@@ -212,7 +212,7 @@ class Game:
             return self.h3() + self.cost
 
     def __eq__(self, o: object) -> bool:
-        return type(o) == Game and hash(self.compute_heuristic()) == hash(o)
+        return type(o) == Game and self.board == o.board
 
     def __gt__(self, o: object) -> bool:
         return type(o) == Game and self.compute_heuristic() > o.compute_heuristic()
