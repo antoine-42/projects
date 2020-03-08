@@ -79,16 +79,13 @@ class Game:
         print(display)
 
     def move(self,
-             x: int,
-             y: int,
              direction: Direction):
-        """Move a tile in a direction.
+        """Move the None tile in a direction, and increment the cost.
 
-        :param x:
-        :param y:
         :param direction:
         :return:
         """
+        x, y = index_2d(self.board, None)
         if direction == Direction.RIGHT:
             if y == self.height - 1:
                 raise ValueError("Can't move this cell right")
@@ -109,6 +106,22 @@ class Game:
                 raise ValueError("Can't move this cell down")
             else:
                 self.board[x][y], self.board[x + 1][y] = self.board[x + 1][y], self.board[x][y]
+        self.cost += 1
+
+    def generate_children(self) -> list:
+        """Generate all possible states that can be made from the current state of the board.
+
+        :return: [Game]
+        """
+        children = []
+        for move in Direction:
+            curr_child = self.copy()
+            try:
+                curr_child.move(move)
+            except ValueError:
+                continue
+            children.append(curr_child)
+        return children
 
     def finished(self) -> bool:
         """Check whether the game is finished.
