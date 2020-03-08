@@ -96,6 +96,9 @@ class Solver:
     def a_star(self, heuristic: Heuristic) -> (bool, int):
         """A* algorithm using the requested heuristic.
 
+        The queue is automatically sorted using the heapq library, which uses Game.__gt__, which uses the chosen
+        heuristic.
+
         :param heuristic:
         :return: True if a finished game was reached, the number of processed nodes, and if the game was finished the
         final path cost.
@@ -109,7 +112,7 @@ class Solver:
         while len(queue) > 0:
             parent = heapq.heappop(queue)
             past_states.add(parent)
-            for child in game.generate_children():
+            for child in parent.generate_children():
                 new_processed_nodes += 1
                 if child.finished():
                     return True, new_processed_nodes, child.cost
