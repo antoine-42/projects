@@ -48,20 +48,21 @@ def f_eval(state, player):
                + diagonal_unfinished_lines_number(board, player, True) \
                + diagonal_unfinished_lines_number(board, player, False)
 
+    if type(state) != GameState:
+        return 0
     res = total_unfinished_lines_number(state.board, player)
     opponent = 'X' if player == 'O' else 'O'
     res -= total_unfinished_lines_number(state.board, opponent)
     return res
 
 
-def minimax_decision(state, game):
+def minimax_decision(state, game, prof_max: int = 20):
     """Given a state in a game, calculate the best move by searching
     forward all the way to the terminal states. [Figure 5.3]"""
     global expandedNodes
 
     player = game.to_move(state)
     prof = 0
-    prof_max = 20
     expandedNodes = 0
 
     def max_value(state, prof, profMax):
@@ -100,14 +101,13 @@ def minimax_decision(state, game):
 # ______________________________________________________________________________
 
 
-def alphabeta_search(state, game):
+def alphabeta_search(state, game, prof_max: int = 20):
     """Search game to determine best action; use alpha-beta pruning.
     As in [Figure 5.7], this version searches all the way to the leaves."""
     global expandedNodes
 
     player = game.to_move(state)
     prof = 0
-    prof_max = 20
     expandedNodes = 0
 
     # Functions used by alphabeta
@@ -220,19 +220,19 @@ def query_player(game, state):
     return move
 
 
-def random_player(game, state):
+def random_player(game, state, prof_max):
     """A player that chooses a legal move at random."""
     return random.choice(game.actions(state))
 
 
-def alphabeta_player(game, state):
-    res = alphabeta_search(state, game)
+def alphabeta_player(game, state, prof_max: int = 20):
+    res = alphabeta_search(state, game, prof_max)
     print("noeuds developpes : " + str(expandedNodes))
     return res
 
 
-def minimax_player(game, state):
-    res = minimax_decision(state, game)
+def minimax_player(game, state, prof_max: int = 20):
+    res = minimax_decision(state, game, prof_max)
     print("noeuds developpes : " + str(expandedNodes))
     return res
 
@@ -277,12 +277,15 @@ class Game:
     def __repr__(self):
         return '<{}>'.format(self.__class__.__name__)
 
-    def play_game(self, *players):
+    def play_game(self, *players, prof_max: int = None):
         """Play an n-person, move-alternating game."""
         state = self.initial
         while True:
             for player in players:
-                move = player(self, state)
+                if prof_max is not None:
+                    move = player(self, state, prof_max)
+                else:
+                    move = player(self, state)
                 state = self.result(state, move)
                 if self.terminal_test(state):
                     self.display(state)
