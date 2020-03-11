@@ -7,6 +7,7 @@ from utils import argmax
 infinity = float('inf')
 GameState = namedtuple('GameState', 'to_move, utility, board, moves')
 
+
 # ______________________________________________________________________________
 # Minimax Search
 
@@ -57,21 +58,21 @@ def minimax_decision(state, game):
     """Given a state in a game, calculate the best move by searching
     forward all the way to the terminal states. [Figure 5.3]"""
     global expandedNodes
-    
+
     player = game.to_move(state)
     prof = 0
-    profMax=20
+    profMax = 20
     expandedNodes = 0
 
     def max_value(state, prof, profMax):
         global expandedNodes
-        prof+=1
+        prof += 1
         expandedNodes += 1
         if game.terminal_test(state):
-            #print "profondeur atteinte {}".format(prof)
+            # print "profondeur atteinte {}".format(prof)
             return game.utility(state, player)
-        if profMax-prof <= 0:
-            return fEval(state, player)        
+        if profMax - prof <= 0:
+            return fEval(state, player)
         v = -infinity
         for a in game.actions(state):
             v = max(v, min_value(game.result(state, a), prof, profMax))
@@ -79,12 +80,12 @@ def minimax_decision(state, game):
 
     def min_value(state, prof, profMax):
         global expandedNodes
-        prof+=1
+        prof += 1
         expandedNodes += 1
         if game.terminal_test(state):
-           # print "profondeur atteinte {}".format(prof)
+            # print "profondeur atteinte {}".format(prof)
             return game.utility(state, player)
-        if profMax-prof <= 0:
+        if profMax - prof <= 0:
             return fEval(state, player)
         v = infinity
         for a in game.actions(state):
@@ -95,6 +96,7 @@ def minimax_decision(state, game):
     return argmax(game.actions(state),
                   key=lambda a: min_value(game.result(state, a), prof, profMax))
 
+
 # ______________________________________________________________________________
 
 
@@ -102,20 +104,20 @@ def alphabeta_search(state, game):
     """Search game to determine best action; use alpha-beta pruning.
     As in [Figure 5.7], this version searches all the way to the leaves."""
     global expandedNodes
-    
+
     player = game.to_move(state)
     prof = 0
-    profMax=20
+    profMax = 20
     expandedNodes = 0
-    
+
     # Functions used by alphabeta
     def max_value(state, prof, alpha, beta):
         global expandedNodes
-        prof+=1
+        prof += 1
         expandedNodes += 1
         if game.terminal_test(state):
             return game.utility(state, player)
-        if profMax-prof <= 0:
+        if profMax - prof <= 0:
             return fEval(state, player)
         v = -infinity
         for a in game.actions(state):
@@ -127,12 +129,12 @@ def alphabeta_search(state, game):
 
     def min_value(state, prof, alpha, beta):
         global expandedNodes
-        prof+=1
-        expandedNodes += 1        
+        prof += 1
+        expandedNodes += 1
         if game.terminal_test(state):
             return game.utility(state, player)
-        if profMax-prof <= 0:
-            return fEval(state, player)        
+        if profMax - prof <= 0:
+            return fEval(state, player)
         v = infinity
         for a in game.actions(state):
             v = min(v, max_value(game.result(state, a), prof, alpha, beta))
@@ -188,7 +190,7 @@ def alphabeta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
     # The default test cuts off at depth d or at a terminal state
     cutoff_test = (cutoff_test or
                    (lambda state, depth: depth > d or
-                    game.terminal_test(state)))
+                                         game.terminal_test(state)))
     eval_fn = eval_fn or (lambda state: game.utility(state, player))
     best_score = -infinity
     beta = infinity
@@ -199,6 +201,7 @@ def alphabeta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
             best_score = v
             best_action = a
     return best_action
+
 
 # ______________________________________________________________________________
 # Players for Games
@@ -224,14 +227,17 @@ def random_player(game, state):
 
 
 def alphabeta_player(game, state):
-    res =  alphabeta_search(state, game)
-    print("noeuds developpes : " +str(expandedNodes))
+    res = alphabeta_search(state, game)
+    print("noeuds developpes : " + str(expandedNodes))
     return res
 
+
 def minimax_player(game, state):
-    res =  minimax_decision(state, game)
-    print("noeuds developpes : " +str(expandedNodes))
+    res = minimax_decision(state, game)
+    print("noeuds developpes : " + str(expandedNodes))
     return res
+
+
 # ______________________________________________________________________________
 # Some Sample Games
 
@@ -316,7 +322,7 @@ class Fig52Game(Game):
 class Fig52Extended(Game):
     """Similar to Fig52Game but bigger. Useful for visualisation"""
 
-    succs = {i:dict(l=i*3+1, m=i*3+2, r=i*3+3) for i in range(13)}
+    succs = {i: dict(l=i * 3 + 1, m=i * 3 + 2, r=i * 3 + 3) for i in range(13)}
     utils = dict()
 
     def actions(self, state):
@@ -336,6 +342,7 @@ class Fig52Extended(Game):
 
     def to_move(self, state):
         return 'MIN' if state in {1, 2, 3} else 'MAX'
+
 
 class TicTacToe(Game):
     """Play TicTacToe on an h x v board, with Max (first player) playing 'X'.
