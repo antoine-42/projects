@@ -220,7 +220,7 @@ def query_player(game, state):
     return move
 
 
-def random_player(game, state, prof_max):
+def random_player(game, state, prof_max=None):
     """A player that chooses a legal move at random."""
     return random.choice(game.actions(state))
 
