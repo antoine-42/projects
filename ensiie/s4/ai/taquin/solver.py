@@ -25,22 +25,13 @@ class Solver:
         while len(queue) > 0:
             curr_parent = queue.pop(0)
             past_states.add(curr_parent)
-            for x in range(curr_parent.width):
-                for y in range(curr_parent.height):
-                    # Don't iterate over all moves, otherwise we'll get a lot of duplicate states.
-                    for move in Direction.UP, Direction.RIGHT:
-                        curr_child = curr_parent.copy()
-                        try:
-                            curr_child.move(x, y, move)
-                        except ValueError:
-                            continue
-                        processed_nodes_total += 1
-                        curr_child.cost += 1
-                        if curr_child.finished():
-                            return True, processed_nodes_total, curr_child.cost
-                        # Don't go back to a previous state, that would be a loop.
-                        if curr_child not in past_states and curr_child not in queue:
-                            queue.append(curr_child)
+            for curr_child in curr_parent.generate_children():
+                processed_nodes_total += 1
+                if curr_child.finished():
+                    return True, processed_nodes_total, curr_child.cost
+                # Don't go back to a previous state, that would be a loop. Can't have a loop in a tree.
+                if curr_child not in past_states and curr_child not in queue:
+                    queue.append(curr_child)
         return False, processed_nodes_total, -1
 
     def depth_first_search(
@@ -69,31 +60,22 @@ class Solver:
         if game is None:
             game = self.game
         past_states.add(game)
-        for x in range(game.width):
-            for y in range(game.height):
-                # Don't iterate over all moves, otherwise we'll get a lot of duplicate states.
-                for move in Direction.UP, Direction.RIGHT:
-                    curr_child = game.copy()
-                    try:
-                        curr_child.move(x, y, move)
-                    except ValueError:
-                        continue
-                    processed_nodes_total += 1
-                    curr_child.cost += 1
-                    if curr_child.finished():
-                        return True, processed_nodes_total, past_states, curr_child.cost
-                    # Don't go back to a previous state, that would be a loop.
-                    if curr_child not in past_states \
-                            and (max_depth is None or max_depth > 1):  # Also depth check.
-                        result, new_processed_nodes, new_past_states, cost = self.depth_first_search(
-                            curr_child,
-                            None if max_depth is None else max_depth - 1,
-                            past_states
-                        )
-                        past_states |= new_past_states
-                        processed_nodes_total += new_processed_nodes
-                        if result:
-                            return True, processed_nodes_total, past_states, cost
+        for curr_child in game.generate_children():
+            processed_nodes_total += 1
+            if curr_child.finished():
+                return True, processed_nodes_total, past_states, curr_child.cost
+            # Don't go back to a previous state, that would be a loop.
+            if curr_child not in past_states and (max_depth is None or max_depth > 1):  # Also depth check.
+                result, new_processed_nodes, new_past_states, cost = self.depth_first_search(
+                    curr_child,
+                    None if max_depth is None else max_depth - 1,
+                    past_states
+                )
+                # merge past states with the new states
+                past_states |= new_past_states
+                processed_nodes_total += new_processed_nodes
+                if result:
+                    return True, processed_nodes_total, past_states, cost
         return False, processed_nodes_total, past_states, -1
 
     def iterative_deepening_search(self) -> (bool, int):
@@ -114,6 +96,9 @@ class Solver:
     def a_star(self, heuristic: Heuristic) -> (bool, int):
         """A* algorithm using the requested heuristic.
 
+        The queue is automatically sorted using the heapq library, which uses Game.__gt__, which uses the chosen
+        heuristic.
+
         :param heuristic:
         :return: True if a finished game was reached, the number of processed nodes, and if the game was finished the
         final path cost.
@@ -127,20 +112,11 @@ class Solver:
         while len(queue) > 0:
             parent = heapq.heappop(queue)
             past_states.add(parent)
-            for x in range(parent.width):
-                for y in range(parent.height):
-                    # Don't iterate over all moves, otherwise we'll get a lot of duplicate states.
-                    for move in Direction.UP, Direction.RIGHT:
-                        child = parent.copy()
-                        try:
-                            child.move(x, y, move)
-                        except ValueError:
-                            continue
-                        child.cost += 1
-                        new_processed_nodes += 1
-                        if child.finished():
-                            return True, new_processed_nodes, child.cost
-                        # Don't go back to a previous state, that would be a loop.
-                        if child not in queue and child not in past_states:
-                            heapq.heappush(queue, child)
+            for child in parent.generate_children():
+                new_processed_nodes += 1
+                if child.finished():
+                    return True, new_processed_nodes, child.cost
+                # Don't go back to a previous state, that would be a loop.
+                if child not in queue and child not in past_states:
+                    heapq.heappush(queue, child)
         return False, new_processed_nodes, -1
