@@ -12,7 +12,7 @@ GameState = namedtuple('GameState', 'to_move, utility, board, moves')
 # Minimax Search
 
 
-def fEval(state, player):
+def f_eval(state, player):
     def direction_unfinished_lines_number(board, player, horizontal: bool = True, width: int = 3) -> int:
         unfinished_lines = 0
         for i in range(1, width + 1):
@@ -61,7 +61,7 @@ def minimax_decision(state, game):
 
     player = game.to_move(state)
     prof = 0
-    profMax = 20
+    prof_max = 20
     expandedNodes = 0
 
     def max_value(state, prof, profMax):
@@ -72,7 +72,7 @@ def minimax_decision(state, game):
             # print "profondeur atteinte {}".format(prof)
             return game.utility(state, player)
         if profMax - prof <= 0:
-            return fEval(state, player)
+            return f_eval(state, player)
         v = -infinity
         for a in game.actions(state):
             v = max(v, min_value(game.result(state, a), prof, profMax))
@@ -86,7 +86,7 @@ def minimax_decision(state, game):
             # print "profondeur atteinte {}".format(prof)
             return game.utility(state, player)
         if profMax - prof <= 0:
-            return fEval(state, player)
+            return f_eval(state, player)
         v = infinity
         for a in game.actions(state):
             v = min(v, max_value(game.result(state, a), prof, profMax))
@@ -94,7 +94,7 @@ def minimax_decision(state, game):
 
     # Body of minimax_decision:
     return argmax(game.actions(state),
-                  key=lambda a: min_value(game.result(state, a), prof, profMax))
+                  key=lambda a: min_value(game.result(state, a), prof, prof_max))
 
 
 # ______________________________________________________________________________
@@ -107,7 +107,7 @@ def alphabeta_search(state, game):
 
     player = game.to_move(state)
     prof = 0
-    profMax = 20
+    prof_max = 20
     expandedNodes = 0
 
     # Functions used by alphabeta
@@ -117,8 +117,8 @@ def alphabeta_search(state, game):
         expandedNodes += 1
         if game.terminal_test(state):
             return game.utility(state, player)
-        if profMax - prof <= 0:
-            return fEval(state, player)
+        if prof_max - prof <= 0:
+            return f_eval(state, player)
         v = -infinity
         for a in game.actions(state):
             v = max(v, min_value(game.result(state, a), prof, alpha, beta))
@@ -133,8 +133,8 @@ def alphabeta_search(state, game):
         expandedNodes += 1
         if game.terminal_test(state):
             return game.utility(state, player)
-        if profMax - prof <= 0:
-            return fEval(state, player)
+        if prof_max - prof <= 0:
+            return f_eval(state, player)
         v = infinity
         for a in game.actions(state):
             v = min(v, max_value(game.result(state, a), prof, alpha, beta))
@@ -189,8 +189,7 @@ def alphabeta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
     # Body of alphabeta_cutoff_search starts here:
     # The default test cuts off at depth d or at a terminal state
     cutoff_test = (cutoff_test or
-                   (lambda state, depth: depth > d or
-                                         game.terminal_test(state)))
+                   (lambda state, depth: depth > d or game.terminal_test(state)))
     eval_fn = eval_fn or (lambda state: game.utility(state, player))
     best_score = -infinity
     beta = infinity
