@@ -31,6 +31,7 @@ def f_eval(state, player):
             return infinity
         if player_count > 0:
             return 10 ** (player_count - 1)
+        return 0
 
     def v_h_score(board, curr_player, horizontal: bool = True) -> int:
         score = 0
@@ -46,7 +47,7 @@ def f_eval(state, player):
 
     if type(state) != GameState:
         return 0
-    board_width = math.sqrt(len(state.board) + len(state.moves))
+    board_width = int(math.sqrt(len(state.board) + len(state.moves)))
     res = total_unfinished_lines_number(state.board, player)
     opponent = 'X' if player == 'O' else 'O'
     res -= total_unfinished_lines_number(state.board, opponent)
