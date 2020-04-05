@@ -1,6 +1,8 @@
 """Games, or Adversarial Search (Chapter 5)"""
 from collections import namedtuple
 import random
+import copy
+
 
 from utils import argmax
 
@@ -110,6 +112,16 @@ def alphabeta_search(state, game, prof_max: int = 20):
     prof = 0
     expandedNodes = 0
 
+    def sort_f_eval(a: tuple) -> int:
+        """Play the a move to the current state, and return its f_eval result.
+        """
+        if type(state) == str:
+            return 0
+        a_state = copy.deepcopy(state)
+        a_state.board[a] = player
+        opponent = 'X' if player == 'O' else 'O'
+        return f_eval(a_state, opponent)
+
     # Functions used by alphabeta
     def max_value(state, prof, alpha, beta):
         global expandedNodes
@@ -120,7 +132,9 @@ def alphabeta_search(state, game, prof_max: int = 20):
         if prof_max - prof <= 0:
             return f_eval(state, player)
         v = -infinity
-        for a in game.actions(state):
+        actions = game.actions(state)
+        actions.sort(key=sort_f_eval)
+        for a in actions:
             v = max(v, min_value(game.result(state, a), prof, alpha, beta))
             if v >= beta:
                 return v
@@ -136,7 +150,9 @@ def alphabeta_search(state, game, prof_max: int = 20):
         if prof_max - prof <= 0:
             return f_eval(state, player)
         v = infinity
-        for a in game.actions(state):
+        actions = game.actions(state)
+        actions.sort(key=sort_f_eval)
+        for a in actions:
             v = min(v, max_value(game.result(state, a), prof, alpha, beta))
             if v <= alpha:
                 return v
@@ -161,14 +177,25 @@ def alphabeta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
 
     player = game.to_move(state)
 
+    def sort_f_eval(a: tuple) -> int:
+        """Play the a move to the current state, and return its f_eval result.
+        """
+        if type(state) == str:
+            return 0
+        a_state = copy.deepcopy(state)
+        a_state.board[a] = player
+        opponent = 'X' if player == 'O' else 'O'
+        return f_eval(a_state, opponent)
+
     # Functions used by alphabeta
     def max_value(state, alpha, beta, depth):
         if cutoff_test(state, depth):
             return eval_fn(state)
         v = -infinity
-        for a in game.actions(state):
-            v = max(v, min_value(game.result(state, a),
-                                 alpha, beta, depth + 1))
+        actions = game.actions(state)
+        actions.sort(key=sort_f_eval)
+        for a in actions:
+            v = max(v, min_value(game.result(state, a), alpha, beta, depth + 1))
             if v >= beta:
                 return v
             alpha = max(alpha, v)
@@ -178,9 +205,10 @@ def alphabeta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
         if cutoff_test(state, depth):
             return eval_fn(state)
         v = infinity
-        for a in game.actions(state):
-            v = min(v, max_value(game.result(state, a),
-                                 alpha, beta, depth + 1))
+        actions = game.actions(state)
+        actions.sort(key=sort_f_eval)
+        for a in actions:
+            v = min(v, max_value(game.result(state, a), alpha, beta, depth + 1))
             if v <= alpha:
                 return v
             beta = min(beta, v)
