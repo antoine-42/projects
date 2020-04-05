@@ -2,7 +2,7 @@
 from collections import namedtuple
 import random
 import copy
-
+import math
 
 from utils import argmax
 
@@ -15,43 +15,38 @@ GameState = namedtuple('GameState', 'to_move, utility, board, moves')
 
 
 def f_eval(state, player):
-    def direction_unfinished_lines_number(board, player, horizontal: bool = True, width: int = 3) -> int:
-        unfinished_lines = 0
-        for i in range(1, width + 1):
-            player_count = 0
-            for j in range(1, width + 1):
-                coordinates = (i, j) if horizontal else (j, i)
-                if coordinates in board:
-                    if board[coordinates] == player:
-                        player_count += 1
-                    else:
-                        player_count = 0
-                        break
-            if player_count == width - 1:
-                unfinished_lines += 1
-        return unfinished_lines
+    board_width = 3
 
-    def diagonal_unfinished_lines_number(board, player, left_to_right: bool = True, width: int = 3) -> int:
+    def line_score(board, curr_player, coordinate_generator):
         player_count = 0
-        for i in range(1, width + 1):
-            coordinates = (i, i) if left_to_right else (i, width + 1 - i)
+        for j in range(1, board_width + 1):
+            coordinates = coordinate_generator(j)
             if coordinates in board:
-                if board[coordinates] == player:
+                if board[coordinates] == curr_player:
                     player_count += 1
                 else:
-                    return 0
-        if player_count == width - 1:
-            return 1
-        return 0
+                    player_count = 0
+                    break
+        if player_count == board_width:
+            return infinity
+        if player_count > 0:
+            return 10 ** (player_count - 1)
 
-    def total_unfinished_lines_number(board, player) -> int:
-        return direction_unfinished_lines_number(board, player, True) \
-               + direction_unfinished_lines_number(board, player, False) \
-               + diagonal_unfinished_lines_number(board, player, True) \
-               + diagonal_unfinished_lines_number(board, player, False)
+    def v_h_score(board, curr_player, horizontal: bool = True) -> int:
+        score = 0
+        for i in range(1, board_width + 1):
+            score += line_score(board, curr_player, lambda j: (i, j) if horizontal else (j, i))
+        return score
+
+    def total_unfinished_lines_number(board, curr_player) -> int:
+        return v_h_score(board, curr_player, True) \
+               + v_h_score(board, curr_player, False) \
+               + line_score(board, curr_player, lambda i: (i, i)) \
+               + line_score(board, curr_player, lambda i: (i, board_width + 1 - i))
 
     if type(state) != GameState:
         return 0
+    board_width = math.sqrt(len(state.board) + len(state.moves))
     res = total_unfinished_lines_number(state.board, player)
     opponent = 'X' if player == 'O' else 'O'
     res -= total_unfinished_lines_number(state.board, opponent)
@@ -424,7 +419,7 @@ class TicTacToe(Game):
                 self.k_in_row(board, move, player, (1, 0)) or
                 self.k_in_row(board, move, player, (1, -1)) or
                 self.k_in_row(board, move, player, (1, 1))):
-            return +10 if player == 'X' else -10
+            return +math.inf if player == 'X' else -math.inf
         else:
             return 0
 
