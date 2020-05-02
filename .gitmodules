@@ -40,3 +40,6 @@
 [submodule "ensiie/s4/web-object-oriented"]
 	path = ensiie/s4/web-object-oriented
 	url = git@github.com:rparpa/ensiie-project.git
+[submodule "ensiie/s4/ocaml-graph-coloring"]
+	path = ensiie/s4/ocaml-graph-coloring
+	url = git@github.com:antoine-42/ocaml-graph-coloring.git
