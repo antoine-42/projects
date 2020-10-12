@@ -43,3 +43,6 @@
 [submodule "ensiie/s5/compilation"]
 	path = ensiie/s5/compilation
 	url = git@github.com:antoine-42/compilation.git
+[submodule "ensiie/s4/ocaml-graph-coloring"]
+	path = ensiie/s4/ocaml-graph-coloring
+	url = git@github.com:antoine-42/ocaml-graph-coloring.git
