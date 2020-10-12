@@ -1,6 +1,8 @@
 """Games, or Adversarial Search (Chapter 5)"""
+import copy
 from collections import namedtuple
 import random
+import heapq
 
 from utils import argmax
 
@@ -111,6 +113,13 @@ def alphabeta_search(state, game, prof_max: int = 20):
     expandedNodes = 0
 
     # Functions used by alphabeta
+    def f_eval_key(action: (int, int)) -> int:
+        if type(state) != GameState:
+            return 0
+        action_state = copy.deepcopy(state)
+        action_state.board[action] = player
+        return f_eval(action_state, player)
+
     def max_value(state, prof, alpha, beta):
         global expandedNodes
         prof += 1
@@ -120,7 +129,8 @@ def alphabeta_search(state, game, prof_max: int = 20):
         if prof_max - prof <= 0:
             return f_eval(state, player)
         v = -infinity
-        for a in game.actions(state):
+        actions = sorted(game.actions(state), key=f_eval_key, reverse=True)
+        for a in actions:
             v = max(v, min_value(game.result(state, a), prof, alpha, beta))
             if v >= beta:
                 return v
@@ -128,6 +138,7 @@ def alphabeta_search(state, game, prof_max: int = 20):
         return v
 
     def min_value(state, prof, alpha, beta):
+
         global expandedNodes
         prof += 1
         expandedNodes += 1
@@ -136,7 +147,8 @@ def alphabeta_search(state, game, prof_max: int = 20):
         if prof_max - prof <= 0:
             return f_eval(state, player)
         v = infinity
-        for a in game.actions(state):
+        actions = sorted(game.actions(state), key=f_eval_key)
+        for a in actions:
             v = min(v, max_value(game.result(state, a), prof, alpha, beta))
             if v <= alpha:
                 return v
