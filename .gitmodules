@@ -52,3 +52,6 @@
 [submodule "ensiie/s5/projet-compilation"]
 	path = ensiie/s5/projet-compilation
 	url = git@github.com:antoine-42/projet-compilation.git
+[submodule "ensiie/s5/grid-computing"]
+	path = ensiie/s5/grid-computing
+	url = git@github.com:antoine-42/grid-computing.git
