@@ -55,3 +55,6 @@
 [submodule "ensiie/s5/grid-computing"]
 	path = ensiie/s5/grid-computing
 	url = git@github.com:antoine-42/grid-computing.git
+[submodule "ensiie/s5/nlp"]
+	path = ensiie/s5/nlp
+	url = git@github.com:antoine-42/nlp.git
